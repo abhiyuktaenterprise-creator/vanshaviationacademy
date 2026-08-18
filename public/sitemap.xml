@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Main Homepage - Aviation Academy in Indore -->
+  <url>
+    <loc>https://vanshaviationacademy.com/</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://vanshaviationacademy.com/vanshaviation-logo.png</image:loc>
+      <image:title>Vansh Aviation Academy - DGCA Approved Pilot Training in Indore</image:title>
+      <image:caption>Best aviation academy in Indore offering CPL, PPL training and ground school programs</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Section - Aviation Training Institute -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#about</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Courses Section - Pilot Training Programs -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#courses</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Facilities Section - Training Infrastructure -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#facilities</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Testimonials Section - Student Reviews -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#testimonials</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contact Section - Aviation Academy Contact -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#contact</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- FAQ Section - Aviation Training Questions -->
+  <url>
+    <loc>https://vanshaviationacademy.com/#faq</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal Pages -->
+  <url>
+    <loc>https://vanshaviationacademy.com/privacy-policy</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://vanshaviationacademy.com/terms-of-service</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <url>
+    <loc>https://vanshaviationacademy.com/cookie-policy</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Future Blog Pages for Aviation Training Content -->
+  <url>
+    <loc>https://vanshaviationacademy.com/blog/how-to-become-commercial-pilot-india</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://vanshaviationacademy.com/blog/dgca-medical-requirements-pilots</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://vanshaviationacademy.com/blog/pilot-training-cost-india</loc>
+    <lastmod>2024-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

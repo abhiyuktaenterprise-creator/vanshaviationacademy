@@ -1,0 +1,54 @@
+User-agent: *
+Allow: /
+
+# Allow all search engines to crawl our aviation academy website
+Allow: /privacy-policy
+Allow: /terms-of-service  
+Allow: /cookie-policy
+
+# Sitemap location for pilot training courses and aviation programs
+Sitemap: https://vanshaviationacademy.com/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Allow specific paths for aviation training content
+Allow: /courses
+Allow: /about
+Allow: /contact
+Allow: /facilities
+Allow: /testimonials
+
+# Block any admin or private directories (if any exist in future)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+
+# Allow images and assets for aviation academy branding
+Allow: /assets/
+Allow: /images/
+Allow: /*.jpg
+Allow: /*.png
+Allow: /*.gif
+Allow: /*.svg
+
+# Special instructions for search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot  
+Allow: /
+
+# Allow social media crawlers for aviation content sharing
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Block irrelevant bots to save bandwidth
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
