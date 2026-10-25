@@ -17,16 +17,18 @@ import {
   CheckCircle2,
   QrCode,
   Layers,
+  PenTool,
 } from 'lucide-react';
 import { Student } from '@/types/student';
 import {
-  renderVanshClassicCertificate,
   renderLuxuryCertificate,
+  renderVanshClassicCertificate,
   CertificateData,
   CertificateTemplateType,
 } from '@/utils/certificateCanvas';
 
 const logoImage = '/vanshaviation-logo.png';
+const rajPratapSignature = '/certificate/raj-pratap-singh-signature.png';
 
 interface CertificateModalProps {
   open: boolean;
@@ -41,20 +43,21 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [loading, setLoading] = useState(false);
-  const [templateType, setTemplateType] = useState<CertificateTemplateType>('classic');
+  // Default to Modern Luxury UI as requested
+  const [templateType, setTemplateType] = useState<CertificateTemplateType>('luxury');
 
   // Form Fields
   const [formData, setFormData] = useState<CertificateData>({
-    studentName: '',
-    fatherName: '',
-    registrationNumber: '',
-    courseName: 'IATA Basic Aviation',
-    duration: '1 Month Certificate Course',
-    admissionDate: new Date().toLocaleDateString('en-GB'),
+    studentName: 'Rajesh Kumar Verma',
+    fatherName: 'Surendra Kumar Verma',
+    registrationNumber: 'VAA-2025-CPL-01',
+    courseName: 'Commercial Pilot License (CPL)',
+    duration: '12 - 18 Months (Full Time)',
+    admissionDate: '15/01/2025',
     issueDate: new Date().toLocaleDateString('en-GB'),
-    courseStartDate: '15-08-2026',
-    courseEndDate: '15-09-2026',
-    status: 'Verified Active Cadet',
+    courseStartDate: '2025-02-01',
+    courseEndDate: '2026-06-30',
+    status: 'Course Completed & Certified',
     campus: 'PU4 Vijay Nagar, Behind Konark Hotel, Indore (M.P.) - 452010',
     qrType: 'vansh_code',
   });
@@ -65,13 +68,13 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
       setFormData({
         studentName: student.student_name || '',
         fatherName: student.father_name || '',
-        registrationNumber: student.registration_number || 'ISO2020IATA066-USRWA50056',
-        courseName: student.course_name || 'IATA Basic Aviation',
+        registrationNumber: student.registration_number || 'VAA-2025-CPL-01',
+        courseName: student.course_name || 'Commercial Pilot License (CPL)',
         duration: '12 - 18 Months (Full Time)',
         admissionDate: student.admission_date || new Date().toLocaleDateString('en-GB'),
         issueDate: new Date().toLocaleDateString('en-GB'),
-        courseStartDate: student.course_start_date || '15-08-2026',
-        courseEndDate: student.course_end_date || '15-09-2026',
+        courseStartDate: student.course_start_date || '2025-02-01',
+        courseEndDate: student.course_end_date || '2026-06-30',
         status:
           student.status === 'Completed' || student.status === 'Certified'
             ? 'Course Completed & DGCA Certified'
@@ -81,16 +84,16 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
       });
     } else {
       setFormData({
-        studentName: 'OMKAR NAGESH TEKALE',
-        fatherName: 'NAGESH TEKALE',
-        registrationNumber: 'ISO2020IATA066-USRWA50056',
-        courseName: 'IATA Basic Aviation',
-        duration: '1 Month Certificate Course',
-        admissionDate: '25-10-2026',
-        issueDate: '25-10-2026',
-        courseStartDate: '15-08-2026',
-        courseEndDate: '15-09-2026',
-        status: 'Course Completed & Certified',
+        studentName: 'Rajesh Kumar Verma',
+        fatherName: 'Surendra Kumar Verma',
+        registrationNumber: 'VAA-2025-CPL-01',
+        courseName: 'Commercial Pilot License (CPL)',
+        duration: '12 - 18 Months (Full Time)',
+        admissionDate: '15/01/2025',
+        issueDate: new Date().toLocaleDateString('en-GB'),
+        courseStartDate: '2025-02-01',
+        courseEndDate: '2026-06-30',
+        status: 'Course Completed & DGCA Certified',
         campus: 'PU4 Vijay Nagar, Behind Konark Hotel, Indore (M.P.) - 452010',
         qrType: 'vansh_code',
       });
@@ -106,17 +109,18 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
       if (canvasRef.current && isMounted) {
         setLoading(true);
         try {
-          if (templateType === 'classic') {
+          if (templateType === 'luxury') {
+            await renderLuxuryCertificate(
+              canvasRef.current,
+              formData,
+              logoImage,
+              rajPratapSignature
+            );
+          } else {
             await renderVanshClassicCertificate(
               canvasRef.current,
               formData,
               '/vansh-qr-code.png'
-            );
-          } else {
-            await renderLuxuryCertificate(
-              canvasRef.current,
-              formData,
-              logoImage
             );
           }
         } catch (err) {
@@ -140,7 +144,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     const canvas = canvasRef.current;
     const link = document.createElement('a');
     const safeName = (formData.studentName || 'Vansh_Cadet').trim().replace(/[^a-zA-Z0-9]/g, '_');
-    link.download = `Vansh_Certificate_${templateType}_${safeName}.png`;
+    link.download = `Vansh_Aviation_Certificate_${safeName}.png`;
     link.href = canvas.toDataURL('image/png', 1.0);
     link.click();
   };
@@ -198,11 +202,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <DialogTitle className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                 <span>Official Flight Certificate Generator</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">
-                  {templateType === 'classic' ? 'Vansh Classic 2020 Design' : 'DGCA Wings HD'}
+                  Modern Luxury HD • Raj Pratap Singh
                 </span>
               </DialogTitle>
               <DialogDescription className="text-xs text-slate-400">
-                Official certificate generator with integrated Vansh QR code, live preview and 1-click HD download.
+                Authorized signatory: Raj Pratap Singh • Direct verification QR & 2400x1700 HD Download.
               </DialogDescription>
             </div>
           </div>
@@ -232,39 +236,62 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
         {/* Content Body: Left Form Inputs + Right Live Preview */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-950/40">
-          {/* Column 1: Editable Fields (4 cols on lg) */}
+          {/* Column 1: Editable Fields (5 cols on lg) */}
           <div className="lg:col-span-5 space-y-4 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
             {/* Template Selector */}
             <div>
               <Label className="text-slate-300 text-xs font-semibold mb-1.5 flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5 text-amber-400" />
-                <span>Certificate Template Design</span>
+                <span>Certificate Design Format</span>
               </Label>
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   type="button"
+                  onClick={() => setTemplateType('luxury')}
+                  className={`p-2.5 rounded-lg text-left border text-xs font-medium transition-all ${
+                    templateType === 'luxury'
+                      ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-sm'
+                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="font-bold flex items-center gap-1.5">
+                    <span>✈️ Modern Luxury UI</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Brand-New Gold & Navy Pilot</div>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setTemplateType('classic')}
-                  className={`p-2 rounded-lg text-left border text-xs font-medium transition-all ${
+                  className={`p-2.5 rounded-lg text-left border text-xs font-medium transition-all ${
                     templateType === 'classic'
                       ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-sm'
                       : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                   }`}
                 >
-                  <div className="font-bold">🎖️ Vansh Classic</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">IATA & 2020 Award Original</div>
+                  <div className="font-bold flex items-center gap-1.5">
+                    <span>🎖️ Classic Format</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">Reference Design</div>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setTemplateType('luxury')}
-                  className={`p-2 rounded-lg text-left border text-xs font-medium transition-all ${
-                    templateType === 'luxury'
-                      ? 'bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                  }`}
-                >
-                  <div className="font-bold">✈️ DGCA Wings</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Luxury Gold & Navy Pilot</div>
-                </button>
+              </div>
+            </div>
+
+            {/* Authorised Signatory Info Card */}
+            <div className="p-3 bg-slate-950/80 rounded-lg border border-slate-800/80 flex items-center justify-between">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/30">
+                  <PenTool className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Raj Pratap Singh</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono">Signed</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400">Director & Authorised Signatory</div>
+                </div>
+              </div>
+              <div className="text-[11px] text-amber-400 font-serif italic">
+                Raj Pratap Singh
               </div>
             </div>
 
@@ -283,75 +310,85 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
             <div className="space-y-3 text-xs">
               <div>
-                <Label className="text-slate-300 text-xs font-medium">Mr./Miss. Cadet Full Name *</Label>
+                <Label className="text-slate-300 text-xs font-medium">Cadet Full Name *</Label>
                 <Input
                   value={formData.studentName}
                   onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
-                  placeholder="e.g. OMKAR NAGESH TEKALE"
+                  placeholder="e.g. Rajesh Kumar Verma"
                   className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-bold uppercase"
                 />
               </div>
 
               <div>
-                <Label className="text-slate-300 text-xs font-medium">S/o / D/o. Father's Name *</Label>
+                <Label className="text-slate-300 text-xs font-medium">Father's Name (S/O, D/O) *</Label>
                 <Input
                   value={formData.fatherName || ''}
                   onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
-                  placeholder="e.g. NAGESH TEKALE"
+                  placeholder="e.g. Surendra Kumar Verma"
                   className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-bold uppercase"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label className="text-slate-300 text-xs font-medium">Certificate / Reg No. *</Label>
+                  <Label className="text-slate-300 text-xs font-medium">Registration Number *</Label>
                   <Input
                     value={formData.registrationNumber}
                     onChange={(e) => setFormData({ ...formData, registrationNumber: e.target.value })}
-                    placeholder="e.g. ISO2020IATA066-USRWA50056"
+                    placeholder="e.g. VAA-2025-CPL-01"
                     className="bg-slate-950 border-slate-800 text-white text-xs mt-1 font-mono focus:border-amber-400"
                   />
                 </div>
                 <div>
-                  <Label className="text-slate-300 text-xs font-medium">Date of Issue</Label>
+                  <Label className="text-slate-300 text-xs font-medium">Date of Admission / Issue</Label>
                   <Input
-                    value={formData.issueDate || formData.admissionDate || ''}
-                    onChange={(e) => setFormData({ ...formData, issueDate: e.target.value })}
-                    placeholder="25-10-2026"
+                    value={formData.admissionDate || ''}
+                    onChange={(e) => setFormData({ ...formData, admissionDate: e.target.value })}
+                    placeholder="DD/MM/YYYY"
                     className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-slate-300 text-xs font-medium">Completed Course In *</Label>
+                <Label className="text-slate-300 text-xs font-medium">Aviation Program *</Label>
                 <Input
                   value={formData.courseName}
                   onChange={(e) => setFormData({ ...formData, courseName: e.target.value })}
-                  placeholder="e.g. IATA Basic Aviation"
+                  placeholder="e.g. Commercial Pilot License (CPL)"
                   className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label className="text-slate-300 text-xs font-medium">Duration From (Start)</Label>
+                  <Label className="text-slate-300 text-xs font-medium">Course Duration</Label>
                   <Input
-                    value={formData.courseStartDate || ''}
-                    onChange={(e) => setFormData({ ...formData, courseStartDate: e.target.value })}
-                    placeholder="15-08-2026"
-                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-mono"
+                    value={formData.duration || ''}
+                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                    placeholder="12 - 18 Months (Full Time)"
+                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400"
                   />
                 </div>
                 <div>
-                  <Label className="text-slate-300 text-xs font-medium">Duration To (End)</Label>
+                  <Label className="text-slate-300 text-xs font-medium">Training Status</Label>
                   <Input
-                    value={formData.courseEndDate || ''}
-                    onChange={(e) => setFormData({ ...formData, courseEndDate: e.target.value })}
-                    placeholder="15-09-2026"
-                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-mono"
+                    value={formData.status || ''}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    placeholder="Course Completed & Certified"
+                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400"
                   />
                 </div>
+              </div>
+
+              <div>
+                <Label className="text-slate-300 text-xs font-medium">Campus Location</Label>
+                <Input
+                  value={formData.campus || ''}
+                  onChange={(e) => setFormData({ ...formData, campus: e.target.value })}
+                  placeholder="PU4 Vijay Nagar, Behind Konark Hotel, Indore (M.P.)"
+                  className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400"
+                />
               </div>
 
               {/* QR Code Style Selector */}
@@ -395,7 +432,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             {loading && (
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-amber-400 gap-2">
                 <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-xs font-medium text-slate-300">Rendering 2400x1650 Certificate...</span>
+                <span className="text-xs font-medium text-slate-300">Rendering 2400x1700 Certificate...</span>
               </div>
             )}
 
@@ -408,7 +445,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             <div className="mt-3 text-center text-[11px] text-slate-400 flex items-center justify-center gap-4">
-              <span>Resolution: <strong>2400 × 1650 px (300 DPI Ready)</strong></span>
+              <span>Resolution: <strong>2400 × 1700 px (300 DPI Ready)</strong></span>
+              <span>•</span>
+              <span>Signatory: <strong className="text-amber-300">Raj Pratap Singh</strong></span>
               <span>•</span>
               <span>Format: <strong>High-Definition Canvas PNG</strong></span>
             </div>

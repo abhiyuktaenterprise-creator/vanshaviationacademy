@@ -294,13 +294,30 @@ export const renderVanshClassicCertificate = async (
     console.warn('Could not load QR code image', err);
   }
 
-  // Official Signature
+  // Official Signature - Raj Pratap Singh
   try {
-    const sigImg = await loadImg('/certificate/signature-clean.png');
-    ctx.drawImage(sigImg, 1930, 1260, 270, 200);
+    const sigImg = await loadImg('/certificate/raj-pratap-singh-signature.png');
+    ctx.drawImage(sigImg, 1920, 1250, 310, 150);
   } catch (err) {
     console.warn('Could not load signature image', err);
   }
+
+  // Signature line & Authorised Signatory text
+  ctx.strokeStyle = '#505050';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(1920, 1420);
+  ctx.lineTo(2240, 1420);
+  ctx.stroke();
+
+  ctx.fillStyle = '#10448C';
+  ctx.font = 'bold 24px "Times New Roman", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('RAJ PRATAP SINGH', 2080, 1455);
+
+  ctx.fillStyle = '#4A5568';
+  ctx.font = 'bold 16px "Inter", sans-serif';
+  ctx.fillText('Director & Authorised Signatory', 2080, 1485);
 };
 
 export const renderLuxuryCertificate = async (
@@ -638,28 +655,27 @@ export const renderLuxuryCertificate = async (
   // 7. Signatures, Gold Seal & Verification QR Code
   const sigY = 1245;
 
-  // Left: Authorized Signatory - Director & Chief Flight Instructor
+  // Left: Authorized Signatory - Raj Pratap Singh (Director & Authorised Signatory)
   const sigLeftX = 240;
   const lineMid = sigLeftX + 170;
 
+  const effectiveSigSrc = signatureSrc || '/certificate/raj-pratap-singh-signature.png';
   let sigDrawn = false;
-  if (signatureSrc) {
-    try {
-      const sigImg = await loadImg(signatureSrc);
-      const targetW = 280;
-      const targetH = (sigImg.height * targetW) / sigImg.width;
-      ctx.drawImage(sigImg, sigLeftX + 30, sigY - 30, targetW, targetH);
-      sigDrawn = true;
-    } catch {
-      // fallback
-    }
+  try {
+    const sigImg = await loadImg(effectiveSigSrc);
+    const targetW = 320;
+    const targetH = (sigImg.height * targetW) / sigImg.width;
+    ctx.drawImage(sigImg, sigLeftX + 10, sigY - 45, targetW, targetH);
+    sigDrawn = true;
+  } catch (err) {
+    console.warn('Failed to load signature image', err);
   }
 
   if (!sigDrawn) {
     ctx.fillStyle = '#061D49';
     ctx.font = 'italic bold 36px "Brush Script MT", "Snell Roundhand", cursive, "Times New Roman"';
     ctx.textAlign = 'center';
-    ctx.fillText('Authorized Signatory', lineMid, sigY + 30);
+    ctx.fillText('Raj Pratap Singh', lineMid, sigY + 30);
     ctx.strokeStyle = '#061D49';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -676,15 +692,19 @@ export const renderLuxuryCertificate = async (
   ctx.lineTo(sigLeftX + 340, sigY + 55);
   ctx.stroke();
 
-  // Signatory Title
-  ctx.fillStyle = C_SLATE_DARK;
-  ctx.font = 'bold 18px Arial, sans-serif';
+  // Signatory Title & Designation - Raj Pratap Singh
+  ctx.fillStyle = C_NAVY_DEEP;
+  ctx.font = 'bold 22px "Times New Roman", Georgia, serif';
   ctx.textAlign = 'center';
-  ctx.fillText('DIRECTOR & CHIEF INSTRUCTOR', lineMid, sigY + 82);
+  ctx.fillText('RAJ PRATAP SINGH', lineMid, sigY + 84);
+
+  ctx.fillStyle = C_SLATE_DARK;
+  ctx.font = 'bold 14px Arial, sans-serif';
+  ctx.fillText('Director & Authorised Signatory', lineMid, sigY + 108);
 
   ctx.fillStyle = C_GOLD_DARK;
-  ctx.font = 'bold 14px Arial, sans-serif';
-  ctx.fillText('Vansh Aviation Academy • Indore', lineMid, sigY + 104);
+  ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.fillText('Vansh Aviation Academy • Indore Campus', lineMid, sigY + 128);
 
   // Center: Official Luxury Gold Embossed Academy Seal
   const sealCx = W / 2;
@@ -734,25 +754,30 @@ export const renderLuxuryCertificate = async (
   ctx.font = 'bold 12px Arial, sans-serif';
   ctx.fillText('INDORE', sealCx, sealCy + 46);
 
-  // Right: Verification QR Code with direct verify link
+  // Right: Verification QR Code (Vanshcode.png or Dynamic Verification QR)
   const qrX = W - 450;
   const qrY = sigY - 45;
   const qrW = 170;
   const qrMid = qrX + (qrW + 16) / 2;
 
-  const verifyUrl = data.registrationNumber 
-    ? `https://vanshaviationacademy.com/verify?q=${encodeURIComponent(data.registrationNumber)}`
-    : 'https://vanshaviationacademy.com/verify';
-
   try {
-    const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
-      margin: 1,
-      color: {
-        dark: '#061D49',
-        light: '#FFFFFF',
-      },
-    });
-    const qrImg = await loadImg(qrDataUrl);
+    let qrImg: HTMLImageElement;
+    if (data.qrType === 'verification_link') {
+      const verifyUrl = data.registrationNumber 
+        ? `https://vanshaviationacademy.com/verify?q=${encodeURIComponent(data.registrationNumber)}`
+        : 'https://vanshaviationacademy.com/verify';
+      const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
+        margin: 1,
+        color: {
+          dark: '#061D49',
+          light: '#FFFFFF',
+        },
+      });
+      qrImg = await loadImg(qrDataUrl);
+    } else {
+      qrImg = await loadImg('/vansh-qr-code.png');
+    }
+
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(qrX, qrY, qrW + 16, qrW + 16);
     ctx.strokeStyle = C_GOLD_MID;
@@ -760,7 +785,7 @@ export const renderLuxuryCertificate = async (
     ctx.strokeRect(qrX, qrY, qrW + 16, qrW + 16);
     ctx.drawImage(qrImg, qrX + 8, qrY + 8, qrW, qrW);
   } catch (err) {
-    console.warn('Failed to generate QR code', err);
+    console.warn('Failed to load QR code', err);
   }
 
   ctx.fillStyle = C_NAVY_MID;
