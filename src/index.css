@@ -2,110 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 210 30% 98%;
-    --foreground: 220 90% 15%;
+    --background: 210 40% 98%;
+    --foreground: 215 65% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 90% 15%;
+    --card-foreground: 215 65% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 90% 15%;
+    --popover-foreground: 215 65% 11%;
 
-    --primary: 220 90% 15%;
-    --primary-foreground: 210 30% 98%;
+    --primary: 215 65% 11%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 45 80% 55%;
-    --secondary-foreground: 220 90% 15%;
+    --secondary: 199 89% 48%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 92%;
-    --muted-foreground: 220 20% 45%;
+    --muted: 210 30% 95%;
+    --muted-foreground: 215 20% 45%;
 
-    --accent: 45 80% 55%;
-    --accent-foreground: 220 90% 15%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 210 20% 88%;
-    --input: 210 20% 88%;
-    --ring: 220 90% 15%;
+    --border: 215 25% 88%;
+    --input: 215 25% 88%;
+    --ring: 199 89% 48%;
 
-    /* Aviation Academy Theme */
-    --aviation-navy: 220 90% 15%;
-    --aviation-gold: 45 80% 55%;
-    --aviation-sky: 210 50% 95%;
-    --aviation-cloud: 210 20% 98%;
+    /* Vansh Aviation Academy Distinctive Aerospace Theme */
+    --aviation-navy: 215 65% 11%;        /* Midnight Sapphire #0A192F */
+    --aviation-sapphire: 215 65% 11%;    /* Midnight Sapphire #0A192F */
+    --aviation-cyan: 199 89% 48%;        /* Electric Aero-Cyan #0EA5E9 */
+    --aviation-gold: 199 89% 48%;        /* Cyan Accent */
+    --aviation-sky: 204 100% 96%;        /* Ice Sky #F0F9FF */
+    --aviation-cloud: 210 40% 98%;
+    --aviation-titanium: 215 20% 65%;    /* Brushed Titanium */
     
     /* Gradients */
-    --gradient-sky: linear-gradient(135deg, hsl(210 50% 95%), hsl(220 30% 98%));
-    --gradient-navy: linear-gradient(135deg, hsl(220 90% 15%), hsl(220 70% 25%));
-    --gradient-gold: linear-gradient(135deg, hsl(45 80% 55%), hsl(40 70% 45%));
+    --gradient-sky: linear-gradient(135deg, hsl(204 100% 96%), hsl(210 40% 98%));
+    --gradient-navy: linear-gradient(135deg, hsl(215 65% 11%), hsl(218 70% 18%));
+    --gradient-gold: linear-gradient(135deg, hsl(199 89% 48%), hsl(186 100% 42%));
+    --gradient-aero: linear-gradient(135deg, #0A192F 0%, #0F2748 50%, #0284C7 100%);
     
     /* Shadows */
-    --shadow-aviation: 0 10px 40px -10px hsl(220 90% 15% / 0.3);
-    --shadow-glow: 0 0 30px hsl(45 80% 55% / 0.4);
+    --shadow-aviation: 0 10px 40px -10px hsl(215 65% 11% / 0.25);
+    --shadow-glow: 0 0 30px hsl(199 89% 48% / 0.35);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 215 65% 8%;
     --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
+    --card: 215 65% 11%;
     --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
+    --popover: 215 65% 11%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 215 65% 11%;
+    --secondary: 215 25% 20%;
     --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
+    --muted: 215 25% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 215 65% 11%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 215 25% 22%;
+    --input: 215 25% 22%;
+    --ring: 199 89% 48%;
   }
 }
 
@@ -116,5 +93,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }

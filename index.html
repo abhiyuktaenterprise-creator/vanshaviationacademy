@@ -3,52 +3,84 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Single Page Apps for GitHub Pages redirect handler -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        } else if (l.hash && l.hash.startsWith('#/')) {
+          var hashPath = l.hash.substring(1);
+          window.history.replaceState(null, null, hashPath);
+        }
+      }(window.location))
+    </script>
+
     <style>
       html {
         scroll-behavior: smooth;
-        scroll-padding-top: 80px;
+        scroll-padding-top: 100px;
       }
     </style>
+    
     <title>Vansh Aviation Academy Indore | DGCA Approved Pilot Training | CPL PPL Courses</title>
-    <meta name="description" content="Best aviation academy in Indore offering DGCA-approved Commercial Pilot License (CPL), Private Pilot License (PPL) training, and ground school programs. Professional flight training institute in Madhya Pradesh." />
+    <meta name="description" content="Best aviation academy in Indore offering DGCA-approved Commercial Pilot License (CPL), Private Pilot License (PPL) training, online certificate verification, and ground school programs. Professional flight training institute in Madhya Pradesh." />
     <meta name="author" content="Vansh Aviation Academy" />
-    <meta name="keywords" content="aviation academy indore, pilot training indore, flight school indore, CPL training indore, PPL training indore, DGCA approved flight training, commercial pilot license indore, private pilot license indore, aviation ground school indore, flight instructor course indore, madhya pradesh aviation academy, best pilot training institute indore, aircraft pilot training, aviation career indore" />
+    <meta name="keywords" content="aviation academy indore, pilot training indore, flight school indore, CPL training indore, PPL training indore, DGCA approved flight training, commercial pilot license indore, private pilot license indore, aviation ground school indore, flight instructor course indore, madhya pradesh aviation academy, best pilot training institute indore, aircraft pilot training, aviation career indore, verify pilot certificate indore" />
     <meta name="robots" content="index, follow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://vanshaviationacademy.com/" />
+    <link rel="icon" type="image/png" href="/vanshaviation-logo.png" />
+    <link rel="apple-touch-icon" href="/vanshaviation-logo.png" />
+
+    <!-- Geo-targeting tags -->
     <meta name="geo.region" content="IN-MP" />
     <meta name="geo.placename" content="Indore, Madhya Pradesh" />
     <meta name="geo.position" content="22.7196;75.8577" />
     <meta name="ICBM" content="22.7196, 75.8577" />
 
+    <!-- Open Graph tags -->
     <meta property="og:title" content="Vansh Aviation Academy Indore | DGCA Approved Pilot Training | CPL PPL Courses" />
     <meta property="og:description" content="Best aviation academy in Indore offering DGCA-approved Commercial Pilot License (CPL), Private Pilot License (PPL) training, and ground school programs." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://vanshaviationacademy.com" />
     <meta property="og:site_name" content="Vansh Aviation Academy" />
     <meta property="og:locale" content="en_IN" />
+    <meta property="og:image" content="https://vanshaviationacademy.com/vanshaviation-logo.png" />
 
+    <!-- Twitter tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vansh Aviation Academy Indore | DGCA Approved Pilot Training" />
     <meta name="twitter:description" content="Best aviation academy in Indore offering DGCA-approved pilot training programs." />
+    <meta name="twitter:image" content="https://vanshaviationacademy.com/vanshaviation-logo.png" />
 
-    <!-- Structured Data for Local Business -->
+    <!-- Structured Data for Educational Organization & Local Business -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
+      "@type": ["EducationalOrganization", "LocalBusiness"],
       "name": "Vansh Aviation Academy",
-      "description": "Professional aviation training academy offering DGCA-approved pilot training programs",
+      "description": "Professional aviation training academy offering DGCA-approved pilot training programs and online certificate verification.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "2nd floor Ideal techno building behind konark hotel PU4 Vijay Nagar",
         "addressLocality": "Indore",
         "addressRegion": "Madhya Pradesh",
+        "postalCode": "452010",
         "addressCountry": "IN"
       },
       "telephone": "+91-9506891936",
       "email": "aviationacademyvansh@gmail.com",
       "url": "https://vanshaviationacademy.com",
-      "foundingDate": "2025",
+      "foundingDate": "2024",
       "logo": "https://vanshaviationacademy.com/vanshaviation-logo.png",
+      "image": "https://vanshaviationacademy.com/vanshaviation-logo.png",
       "hasCredential": {
         "@type": "EducationalOccupationalCredential",
         "credentialCategory": "DGCA Approved Training"

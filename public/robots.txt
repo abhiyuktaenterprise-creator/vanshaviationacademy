@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 
 # Allow all search engines to crawl our aviation academy website
+Allow: /verify
 Allow: /privacy-policy
 Allow: /terms-of-service  
 Allow: /cookie-policy
@@ -11,13 +12,6 @@ Sitemap: https://vanshaviationacademy.com/sitemap.xml
 
 # Crawl delay for respectful crawling
 Crawl-delay: 1
-
-# Allow specific paths for aviation training content
-Allow: /courses
-Allow: /about
-Allow: /contact
-Allow: /facilities
-Allow: /testimonials
 
 # Block any admin or private directories (if any exist in future)
 Disallow: /admin/
