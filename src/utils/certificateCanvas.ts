@@ -334,41 +334,43 @@ export const renderLuxuryCertificate = async (
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // Colors
-  const C_NAVY_DEEP = '#061D49';
-  const C_NAVY_MID = '#0A255C';
-  const C_GOLD_DARK = '#A87C26';
-  const C_GOLD_MID = '#D4AF37';
-  const C_GOLD_LIGHT = '#F4DB85';
-  const C_GOLD_PALE = '#FCF6DE';
-  const C_SLATE_DARK = '#1E293B';
-  const C_SLATE_MUTED = '#64748B';
+  // Distinctive Vansh Aviation Academy Color Palette
+  // Inspired by Vansh Aviation original certificate: Rich Royal Pilot Blue, Warm Bronze Gold & Slate Navy
+  const C_PRIMARY_BLUE = '#0D2F62';     // Rich Classic Royal Pilot Blue
+  const C_ROYAL_BLUE = '#10448C';       // Vansh Aviation Signboard Blue (as on original certificate)
+  const C_ACCENT_GOLD = '#C2974D';      // Warm Vansh Bronze Gold (exact facet color from original certificate)
+  const C_GOLD_DARK = '#9E742D';        // Deep burnished antique bronze
+  const C_GOLD_LIGHT = '#EACD7A';       // Pale champagne gold
+  const C_GOLD_PALE = '#FDF9EC';        // Warm parchment cream for ribbon text
+  const C_SLATE_DARK = '#1C2636';       // Vansh slate navy (exact charcoal from original certificate)
+  const C_SLATE_MUTED = '#5B697C';      // Clean slate steel for labels
+  const C_CARD_BORDER = '#D6DEE8';
 
-  // 1. Background (Warm luxury canvas)
-  ctx.fillStyle = '#FDFDFB';
+  // 1. Background (Pristine luxury white parchment canvas)
+  ctx.fillStyle = '#FCFDFE';
   ctx.fillRect(0, 0, W, H);
 
-  // Outer solid navy frame
-  ctx.fillStyle = C_NAVY_DEEP;
+  // Outer solid pilot navy frame
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.fillRect(0, 0, W, 32);
   ctx.fillRect(0, H - 32, W, 32);
   ctx.fillRect(0, 0, 32, H);
   ctx.fillRect(W - 32, 0, 32, H);
 
-  // Triple Gold Borders
-  ctx.strokeStyle = C_GOLD_MID;
+  // Triple Warm Bronze Gold Borders
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 4;
   ctx.strokeRect(40, 40, W - 80, H - 80);
 
   ctx.strokeStyle = C_GOLD_DARK;
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.5;
   ctx.strokeRect(48, 48, W - 96, H - 96);
 
   ctx.strokeStyle = C_GOLD_LIGHT;
   ctx.lineWidth = 2;
   ctx.strokeRect(56, 56, W - 112, H - 112);
 
-  // 4 Corner Ornaments (Art-Deco Diamonds)
+  // 4 Corner Ornaments (Art-Deco Diamonds in Royal Blue & Bronze Gold)
   const corners = [
     { cx: 56, cy: 56, sx: 1, sy: 1 },
     { cx: W - 56, cy: 56, sx: -1, sy: 1 },
@@ -377,14 +379,14 @@ export const renderLuxuryCertificate = async (
   ];
 
   corners.forEach(({ cx, cy, sx, sy }) => {
-    ctx.fillStyle = C_NAVY_DEEP;
+    ctx.fillStyle = C_PRIMARY_BLUE;
     const x1 = Math.min(cx, cx + sx * 40);
     const y1 = Math.min(cy, cy + sy * 40);
     ctx.fillRect(x1, y1, 40, 40);
 
     const dx = cx + sx * 20;
     const dy = cy + sy * 20;
-    ctx.fillStyle = C_GOLD_MID;
+    ctx.fillStyle = C_ACCENT_GOLD;
     ctx.beginPath();
     ctx.moveTo(dx, dy - 8);
     ctx.lineTo(dx + 8, dy);
@@ -394,8 +396,8 @@ export const renderLuxuryCertificate = async (
     ctx.fill();
   });
 
-  // Subtle Guilloche Rings in Pale Gold
-  ctx.strokeStyle = '#F5F2E6';
+  // Subtle Guilloche Rings in Pale Warm Champagne
+  ctx.strokeStyle = '#F4EEDC';
   ctx.lineWidth = 1;
   for (let r = 400; r < 1200; r += 60) {
     ctx.beginPath();
@@ -423,24 +425,24 @@ export const renderLuxuryCertificate = async (
     console.warn('Failed to load logo on certificate canvas', e);
   }
 
-  // Academy Title
-  ctx.fillStyle = C_NAVY_DEEP;
-  ctx.font = 'bold 46px "Times New Roman", Georgia, serif';
+  // Academy Title (Royal Pilot Blue)
+  ctx.fillStyle = C_ROYAL_BLUE;
+  ctx.font = 'bold 48px "Times New Roman", Georgia, serif';
   ctx.textAlign = 'center';
   ctx.fillText('VANSH AVIATION ACADEMY', W / 2, 285);
 
-  // Subtitle
+  // Subtitle with DGCA, IATA & ISO Accreditations
   ctx.fillStyle = C_GOLD_DARK;
-  ctx.font = 'bold 17px Arial, sans-serif';
+  ctx.font = 'bold 16px Arial, sans-serif';
   ctx.fillText(
-    "DGCA APPROVED AVIATION TRAINING INSTITUTE • INDORE CAMPUS",
+    'DGCA APPROVED • IATA ALIGNED • ISO 9001:2015 CERTIFIED AVIATION ACADEMY • INDORE CAMPUS',
     W / 2,
     320
   );
 
-  // Gold Divider Lines & Star
-  const lineW = 400;
-  ctx.strokeStyle = C_GOLD_MID;
+  // Warm Bronze Gold Divider Lines & Center Star
+  const lineW = 440;
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(W / 2 - lineW, 345);
@@ -450,25 +452,25 @@ export const renderLuxuryCertificate = async (
   ctx.stroke();
 
   // Center Star
-  ctx.fillStyle = C_GOLD_MID;
+  ctx.fillStyle = C_ACCENT_GOLD;
   drawStar(ctx, W / 2, 345, 5, 12, 6);
 
   // 3. Title Ribbon Banner
-  const bw = 960;
+  const bw = 980;
   const bh = 68;
   const bx = W / 2 - bw / 2;
   const by = 380;
 
-  ctx.fillStyle = C_NAVY_DEEP;
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.fillRect(bx, by, bw, bh);
 
-  ctx.strokeStyle = C_GOLD_MID;
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 2;
   ctx.strokeRect(bx + 4, by + 4, bw - 8, bh - 8);
 
   // Ribbon end triangles
   const foldSize = 28;
-  ctx.fillStyle = C_GOLD_MID;
+  ctx.fillStyle = C_ACCENT_GOLD;
   ctx.beginPath();
   ctx.moveTo(bx, by);
   ctx.lineTo(bx - foldSize, by + bh / 2);
@@ -484,13 +486,13 @@ export const renderLuxuryCertificate = async (
   ctx.fill();
 
   ctx.fillStyle = C_GOLD_PALE;
-  ctx.font = 'bold 34px "Times New Roman", Georgia, serif';
+  ctx.font = 'bold 32px "Times New Roman", Georgia, serif';
   ctx.textAlign = 'center';
   ctx.fillText('OFFICIAL ADMISSION LETTER & CERTIFICATE', W / 2, by + 46);
 
   // 4. Preamble & Student Name
   ctx.fillStyle = C_SLATE_MUTED;
-  ctx.font = 'italic 24px "Times New Roman", Georgia, serif';
+  ctx.font = 'italic 23px "Times New Roman", Georgia, serif';
   ctx.fillText(
     'This is to officially certify that the candidate whose particulars appear below',
     W / 2,
@@ -505,7 +507,7 @@ export const renderLuxuryCertificate = async (
   // Candidate Name
   const rawName = data.studentName.trim().toUpperCase() || 'STUDENT FULL NAME';
   const displayName = rawName.startsWith('MR.') || rawName.startsWith('MS.') ? rawName : `MR. ${rawName}`;
-  ctx.fillStyle = C_NAVY_DEEP;
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.font = 'bold 44px "Times New Roman", Georgia, serif';
   ctx.fillText(displayName, W / 2, 570);
 
@@ -524,10 +526,10 @@ export const renderLuxuryCertificate = async (
     ctx.fillText(`S/O, D/O: ${displayFather}`, W / 2, 605);
   }
 
-  // Gold accent line under name
+  // Warm Gold accent line under name
   const nameMetric = ctx.measureText(displayName);
   const nameW = Math.max(nameMetric.width, 360);
-  ctx.strokeStyle = C_GOLD_MID;
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(W / 2 - nameW / 2 - 20, 625);
@@ -542,20 +544,20 @@ export const renderLuxuryCertificate = async (
 
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(cardX, cardY, cardW, cardH);
-  ctx.strokeStyle = C_GOLD_MID;
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 2;
   ctx.strokeRect(cardX, cardY, cardW, cardH);
 
-  // Card Header strip
-  ctx.fillStyle = C_NAVY_DEEP;
+  // Card Header strip (Royal Pilot Blue)
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.fillRect(cardX, cardY, cardW, 44);
 
   ctx.fillStyle = C_GOLD_PALE;
-  ctx.font = 'bold 17px Arial, sans-serif';
+  ctx.font = 'bold 16px Arial, sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('ENROLLMENT RECORD & PROGRAM PARTICULARS', cardX + 30, cardY + 28);
 
-  ctx.fillStyle = C_GOLD_MID;
+  ctx.fillStyle = C_GOLD_LIGHT;
   ctx.textAlign = 'right';
   ctx.fillText('AUTHENTIC DATABASE ENTRY', cardX + cardW - 30, cardY + 28);
 
@@ -598,7 +600,7 @@ export const renderLuxuryCertificate = async (
     },
     {
       label: 'CENTRAL FLIGHT REGISTRY',
-      val: 'Authenticated DGCA Pilot Training Database',
+      val: 'Authenticated DGCA & IATA Cadet Database',
       isHighlight: false,
     },
   ];
@@ -611,8 +613,8 @@ export const renderLuxuryCertificate = async (
     const colX = idx % 2 === 0 ? col1X : col2X;
     const rowY = rowYs[Math.floor(idx / 2)];
 
-    // Gold dot
-    ctx.fillStyle = C_GOLD_MID;
+    // Gold bullet dot
+    ctx.fillStyle = C_ACCENT_GOLD;
     ctx.beginPath();
     ctx.arc(colX + 4, rowY + 6, 4, 0, Math.PI * 2);
     ctx.fill();
@@ -624,12 +626,12 @@ export const renderLuxuryCertificate = async (
     ctx.fillText(f.label, colX + 18, rowY + 10);
 
     // Value
-    ctx.fillStyle = f.isHighlight ? C_NAVY_MID : C_SLATE_DARK;
+    ctx.fillStyle = f.isHighlight ? C_PRIMARY_BLUE : C_SLATE_DARK;
     ctx.font = f.isHighlight ? 'bold 22px Arial, sans-serif' : 'bold 20px Arial, sans-serif';
     ctx.fillText(f.val, colX + 18, rowY + 38);
 
     // Divider line
-    ctx.strokeStyle = '#EBEFF5';
+    ctx.strokeStyle = C_CARD_BORDER;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(colX + 18, rowY + 54);
@@ -647,81 +649,102 @@ export const renderLuxuryCertificate = async (
     1070
   );
   ctx.fillText(
-    'authenticated and uploaded onto our central aviation student registry for verification by airlines and recruiters.',
+    'authenticated and registered under Vansh Aviation Academy central registry in accordance with DGCA & IATA guidelines.',
     W / 2,
     1100
   );
 
-  // 7. Signatures, Gold Seal & Verification QR Code
+  // 7. Five Authority & Accreditation Pillars (Director Signature • ISO 9001:2015 • Seal • IATA • QR)
   const sigY = 1245;
 
-  // Left: Authorized Signatory - Raj Pratap Singh (Director & Authorised Signatory)
-  const sigLeftX = 240;
-  const lineMid = sigLeftX + 170;
-
+  // Pillar 1 (Left): Authorized Signatory - Raj Pratap Singh (Director & Authorised Signatory)
+  const col1Mid = 310;
   const effectiveSigSrc = signatureSrc || '/certificate/raj-pratap-singh-signature.png';
   let sigDrawn = false;
   try {
     const sigImg = await loadImg(effectiveSigSrc);
-    const targetW = 320;
+    const targetW = 280;
     const targetH = (sigImg.height * targetW) / sigImg.width;
-    ctx.drawImage(sigImg, sigLeftX + 10, sigY - 45, targetW, targetH);
+    ctx.drawImage(sigImg, col1Mid - targetW / 2, sigY - 35, targetW, targetH);
     sigDrawn = true;
   } catch (err) {
     console.warn('Failed to load signature image', err);
   }
 
   if (!sigDrawn) {
-    ctx.fillStyle = '#061D49';
-    ctx.font = 'italic bold 36px "Brush Script MT", "Snell Roundhand", cursive, "Times New Roman"';
+    ctx.fillStyle = C_PRIMARY_BLUE;
+    ctx.font = 'italic bold 34px "Brush Script MT", "Snell Roundhand", cursive, "Times New Roman"';
     ctx.textAlign = 'center';
-    ctx.fillText('Raj Pratap Singh', lineMid, sigY + 30);
-    ctx.strokeStyle = '#061D49';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(sigLeftX + 30, sigY + 42);
-    ctx.quadraticCurveTo(lineMid, sigY + 54, sigLeftX + 310, sigY + 38);
-    ctx.stroke();
+    ctx.fillText('Raj Pratap Singh', col1Mid, sigY + 30);
   }
 
   // Signature line
   ctx.strokeStyle = C_SLATE_MUTED;
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(sigLeftX, sigY + 55);
-  ctx.lineTo(sigLeftX + 340, sigY + 55);
+  ctx.moveTo(col1Mid - 150, sigY + 55);
+  ctx.lineTo(col1Mid + 150, sigY + 55);
   ctx.stroke();
 
-  // Signatory Title & Designation - Raj Pratap Singh
-  ctx.fillStyle = C_NAVY_DEEP;
-  ctx.font = 'bold 22px "Times New Roman", Georgia, serif';
+  // Signatory Title & Designation
+  ctx.fillStyle = C_PRIMARY_BLUE;
+  ctx.font = 'bold 21px "Times New Roman", Georgia, serif';
   ctx.textAlign = 'center';
-  ctx.fillText('RAJ PRATAP SINGH', lineMid, sigY + 84);
+  ctx.fillText('RAJ PRATAP SINGH', col1Mid, sigY + 84);
 
   ctx.fillStyle = C_SLATE_DARK;
-  ctx.font = 'bold 14px Arial, sans-serif';
-  ctx.fillText('Director & Authorised Signatory', lineMid, sigY + 108);
+  ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.fillText('Director & Authorised Signatory', col1Mid, sigY + 106);
 
   ctx.fillStyle = C_GOLD_DARK;
-  ctx.font = 'bold 13px Arial, sans-serif';
-  ctx.fillText('Vansh Aviation Academy • Indore Campus', lineMid, sigY + 128);
+  ctx.font = 'bold 12px Arial, sans-serif';
+  ctx.fillText('Vansh Aviation Academy • Indore Campus', col1Mid, sigY + 125);
 
-  // Center: Official Luxury Gold Embossed Academy Seal
+  // Pillar 2 (Center-Left): Official ISO 9001:2015 Certified Logo
+  const col2Mid = 750;
+  try {
+    const isoImg = await loadImg('/certificate/iso-9001-logo.png');
+    const isoW = 145;
+    const isoH = (isoImg.height * isoW) / isoImg.width;
+    ctx.drawImage(isoImg, col2Mid - isoW / 2, sigY - 40, isoW, isoH);
+  } catch (err) {
+    console.warn('Could not load ISO logo', err);
+    // Vector fallback badge
+    ctx.fillStyle = C_PRIMARY_BLUE;
+    ctx.beginPath();
+    ctx.arc(col2Mid, sigY + 30, 52, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = C_GOLD_LIGHT;
+    ctx.font = 'bold 14px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ISO 9001:2015', col2Mid, sigY + 30);
+  }
+
+  ctx.fillStyle = C_PRIMARY_BLUE;
+  ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('ISO 9001:2015 CERTIFIED', col2Mid, sigY + 114);
+
+  ctx.fillStyle = C_SLATE_MUTED;
+  ctx.font = '11px Arial, sans-serif';
+  ctx.fillText('Quality Management System', col2Mid, sigY + 133);
+
+  // Pillar 3 (Center): Official Vansh Aviation Gold Embossed Academy Seal
   const sealCx = W / 2;
   const sealCy = sigY + 40;
-  const sealR = 75;
+  const sealR = 74;
 
-  ctx.fillStyle = C_GOLD_MID;
+  ctx.fillStyle = C_ACCENT_GOLD;
   for (let angle = 0; angle < 360; angle += 10) {
     const rad = (angle * Math.PI) / 180;
     const tx = sealCx + (sealR + 8) * Math.cos(rad);
     const ty = sealCy + (sealR + 8) * Math.sin(rad);
     ctx.beginPath();
-    ctx.arc(tx, ty, 12, 0, Math.PI * 2);
+    ctx.arc(tx, ty, 11, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  ctx.fillStyle = C_NAVY_DEEP;
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.beginPath();
   ctx.arc(sealCx, sealCy, sealR, 0, Math.PI * 2);
   ctx.fill();
@@ -730,35 +753,64 @@ export const renderLuxuryCertificate = async (
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  ctx.strokeStyle = C_GOLD_MID;
+  ctx.strokeStyle = C_ACCENT_GOLD;
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(sealCx, sealCy, sealR - 10, 0, Math.PI * 2);
   ctx.stroke();
 
   ctx.fillStyle = C_GOLD_PALE;
-  ctx.font = 'bold 14px Arial, sans-serif';
+  ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('VANSH AVIATION', sealCx, sealCy - 30);
+  ctx.fillText('VANSH AVIATION', sealCx, sealCy - 28);
 
-  ctx.fillStyle = C_GOLD_MID;
-  ctx.font = 'bold 12px Arial, sans-serif';
-  ctx.fillText('DGCA APPROVED', sealCx, sealCy - 10);
+  ctx.fillStyle = C_ACCENT_GOLD;
+  ctx.font = 'bold 11px Arial, sans-serif';
+  ctx.fillText('DGCA APPROVED', sealCx, sealCy - 9);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 14px Arial, sans-serif';
   ctx.fillText('OFFICIAL', sealCx, sealCy + 10);
-  ctx.fillText('SEAL', sealCx, sealCy + 28);
+  ctx.fillText('SEAL', sealCx, sealCy + 27);
 
   ctx.fillStyle = C_GOLD_LIGHT;
-  ctx.font = 'bold 12px Arial, sans-serif';
-  ctx.fillText('INDORE', sealCx, sealCy + 46);
+  ctx.font = 'bold 11px Arial, sans-serif';
+  ctx.fillText('INDORE', sealCx, sealCy + 44);
 
-  // Right: Verification QR Code (Vanshcode.png or Dynamic Verification QR)
-  const qrX = W - 450;
+  // Pillar 4 (Center-Right): Official IATA Classic Partner Logo
+  const col4Mid = 1650;
+  try {
+    const iataImg = await loadImg('/certificate/iata-logo.png');
+    const iataW = 140;
+    const iataH = (iataImg.height * iataW) / iataImg.width;
+    ctx.drawImage(iataImg, col4Mid - iataW / 2, sigY - 40, iataW, iataH);
+  } catch (err) {
+    console.warn('Could not load IATA logo', err);
+    // Vector fallback badge
+    ctx.fillStyle = C_PRIMARY_BLUE;
+    ctx.beginPath();
+    ctx.arc(col4Mid, sigY + 30, 52, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = C_GOLD_LIGHT;
+    ctx.font = 'bold 16px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('IATA', col4Mid, sigY + 30);
+  }
+
+  ctx.fillStyle = C_PRIMARY_BLUE;
+  ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('IATA CLASSIC STANDARDS', col4Mid, sigY + 114);
+
+  ctx.fillStyle = C_SLATE_MUTED;
+  ctx.font = '11px Arial, sans-serif';
+  ctx.fillText('International Aviation Curriculum', col4Mid, sigY + 133);
+
+  // Pillar 5 (Right): Verification QR Code (Vanshcode.png / Dynamic QR)
+  const col5Mid = 2080;
+  const qrW = 150;
+  const qrX = col5Mid - (qrW + 16) / 2;
   const qrY = sigY - 45;
-  const qrW = 170;
-  const qrMid = qrX + (qrW + 16) / 2;
 
   try {
     let qrImg: HTMLImageElement;
@@ -769,7 +821,7 @@ export const renderLuxuryCertificate = async (
       const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
         margin: 1,
         color: {
-          dark: '#061D49',
+          dark: C_PRIMARY_BLUE,
           light: '#FFFFFF',
         },
       });
@@ -780,7 +832,7 @@ export const renderLuxuryCertificate = async (
 
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(qrX, qrY, qrW + 16, qrW + 16);
-    ctx.strokeStyle = C_GOLD_MID;
+    ctx.strokeStyle = C_ACCENT_GOLD;
     ctx.lineWidth = 2;
     ctx.strokeRect(qrX, qrY, qrW + 16, qrW + 16);
     ctx.drawImage(qrImg, qrX + 8, qrY + 8, qrW, qrW);
@@ -788,19 +840,19 @@ export const renderLuxuryCertificate = async (
     console.warn('Failed to load QR code', err);
   }
 
-  ctx.fillStyle = C_NAVY_MID;
+  ctx.fillStyle = C_PRIMARY_BLUE;
   ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('SCAN TO VERIFY CADET', qrMid, qrY + qrW + 36);
+  ctx.fillText('SCAN TO VERIFY CADET', col5Mid, qrY + qrW + 36);
 
-  ctx.fillStyle = C_GOLD_DARK;
-  ctx.font = 'bold 14px Arial, sans-serif';
-  ctx.fillText('www.vanshaviationacademy.com', qrMid, qrY + qrW + 56);
+  ctx.fillStyle = C_ACCENT_GOLD;
+  ctx.font = 'bold 13px Arial, sans-serif';
+  ctx.fillText('www.vanshaviationacademy.com', col5Mid, qrY + qrW + 54);
 
   // 8. Bottom Security Ribbon
   const ribbonY = H - 90;
-  ctx.strokeStyle = C_GOLD_MID;
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = C_ACCENT_GOLD;
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(100, ribbonY);
   ctx.lineTo(W - 100, ribbonY);
@@ -810,7 +862,7 @@ export const renderLuxuryCertificate = async (
   ctx.font = 'bold 13px Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(
-    'PRECISION   •   SAFETY   •   EXCELLENCE   •   ACHIEVE   —   OFFICIAL FLIGHT CADET REGISTRY OF VANSH AVIATION ACADEMY, INDORE',
+    'PRECISION   •   SAFETY   •   EXCELLENCE   •   DGCA APPROVED   •   IATA ALIGNED   •   ISO 9001:2015 CERTIFIED   —   VANSH AVIATION ACADEMY, INDORE',
     W / 2,
     ribbonY + 22
   );
