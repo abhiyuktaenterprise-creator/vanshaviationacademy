@@ -642,10 +642,10 @@ export const AdminDashboard: React.FC = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => handleOpenCertificate(student)}
-                      className="text-xs h-8 text-sky-700 border-sky-300 hover:bg-sky-50"
+                      className="text-xs h-8 font-semibold text-sky-700 hover:text-sky-900 border-sky-300 hover:border-sky-400 bg-sky-50/70 hover:bg-sky-100 cursor-pointer shadow-sm transition-colors"
                       title="Generate Certificate"
                     >
-                      <Award className="w-3.5 h-3.5 mr-1" />
+                      <Award className="w-3.5 h-3.5 mr-1 text-sky-600" />
                       Certificate
                     </Button>
                     <Button
@@ -765,7 +765,7 @@ export const AdminDashboard: React.FC = () => {
                             size="sm"
                             variant="outline"
                             onClick={() => handleOpenCertificate(student)}
-                            className="h-8 text-xs font-semibold text-sky-700 border-sky-300 hover:bg-sky-50 cursor-pointer shadow-sm"
+                            className="h-8 text-xs font-semibold text-sky-700 hover:text-sky-900 border-sky-300 hover:border-sky-400 bg-sky-50/70 hover:bg-sky-100 cursor-pointer shadow-sm transition-colors"
                             title="Generate Luxury Admission Certificate"
                           >
                             <Award className="w-3.5 h-3.5 mr-1 text-sky-600" />
