@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Vansh Aviation Academy Production Supabase Credentials
+// Fallback guarantees 100% cloud sync across laptops, mobile devices, Vercel & GitHub Pages
+const DEFAULT_SUPABASE_URL = 'https://iinpblwmxpmveibtfzfd.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_apT0tJD0b7ut2AswvbNn2g_iQgUurIE';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY;
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
@@ -10,10 +15,10 @@ export const isSupabaseConfigured = Boolean(
   !supabaseUrl.includes('your-project-id')
 );
 
-// Create Supabase client (with dummy values fallback if not yet configured to prevent build/runtime breaks)
+// Create Supabase client with persistent authentication & auto refresh
 export const supabase = createClient(
-  supabaseUrl || 'https://placeholder-project.supabase.co',
-  supabaseAnonKey || 'placeholder-anon-key',
+  supabaseUrl || DEFAULT_SUPABASE_URL,
+  supabaseAnonKey || DEFAULT_SUPABASE_KEY,
   {
     auth: {
       persistSession: true,

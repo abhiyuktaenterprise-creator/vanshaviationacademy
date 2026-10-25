@@ -390,13 +390,19 @@ export const AdminDashboard: React.FC = () => {
     e.target.value = '';
   };
 
-  // Sync / Reset to Defaults
+  // Live Cloud Sync
   const handleSyncRegistry = async () => {
     setLoading(true);
-    const updated = studentService.resetToDefaults();
-    setStudents(updated);
+    const res = await studentService.getStudents('', showArchived);
+    if (!res.error && res.data) {
+      setStudents(res.data);
+      toast.success('Live cloud registry synchronized successfully', {
+        description: `${res.data.length} flight cadet records active in registry.`,
+      });
+    } else {
+      toast.error('Sync failed', { description: res.error || 'Could not reach cloud database' });
+    }
     setLoading(false);
-    toast.success('Registry synchronized with default records');
   };
 
   // Status Badge styling helper
@@ -517,10 +523,10 @@ export const AdminDashboard: React.FC = () => {
               variant="outline"
               size="sm"
               className="text-xs text-slate-700 hover:text-slate-900 border-slate-300 cursor-pointer"
-              title="Reset with default registry"
+              title="Sync with Live Cloud Database"
             >
               <RefreshCw className="w-3.5 h-3.5 mr-1 text-sky-600" />
-              Sync
+              Sync Cloud
             </Button>
             <Button
               onClick={handleExportData}

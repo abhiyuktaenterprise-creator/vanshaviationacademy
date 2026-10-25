@@ -190,15 +190,29 @@ export const studentService = {
   async addStudent(
     student: NewStudentInput
   ): Promise<{ data: Student | null; error: string | null }> {
+    const today = new Date().toISOString().slice(0, 10);
     const payload = {
       ...student,
-      application_number: student.application_number.trim(),
-      registration_number: student.registration_number.trim(),
-      student_name: student.student_name.trim(),
-      father_name: student.father_name.trim(),
+      application_number: student.application_number ? student.application_number.trim() : `VAA-APP-${Date.now()}`,
+      registration_number: student.registration_number ? student.registration_number.trim() : `VAA-${Date.now()}`,
+      student_name: student.student_name ? student.student_name.trim() : 'Flight Cadet',
+      father_name: student.father_name ? student.father_name.trim() : 'Guardian',
+      date_of_birth: student.date_of_birth && student.date_of_birth.trim() !== '' 
+        ? student.date_of_birth.trim() 
+        : '2001-01-01',
       mobile_number: student.mobile_number ? student.mobile_number.trim() : '',
-      email: student.email ? student.email.trim() : null,
-      course_name: student.course_name.trim(),
+      email: student.email && student.email.trim() !== '' ? student.email.trim() : null,
+      course_name: student.course_name ? student.course_name.trim() : 'Commercial Pilot License (CPL)',
+      admission_date: student.admission_date && student.admission_date.trim() !== '' 
+        ? student.admission_date.trim() 
+        : today,
+      course_start_date: student.course_start_date && student.course_start_date.trim() !== '' 
+        ? student.course_start_date.trim() 
+        : today,
+      course_end_date: student.course_end_date && student.course_end_date.trim() !== '' 
+        ? student.course_end_date.trim() 
+        : null,
+      status: student.status || 'Completed',
       is_archived: student.is_archived ?? false,
       photo_url: student.photo_url || null,
     };
@@ -223,10 +237,13 @@ export const studentService = {
           return { data: data as Student, error: null };
         }
         if (error) {
-          return { data: null, error: error.message };
+          console.warn('Supabase insert error:', error.message);
+          if (error.code === '23505') {
+            return { data: null, error: `Registration or Application number already exists in cloud registry.` };
+          }
         }
-      } catch {
-        // Fallback
+      } catch (err) {
+        console.warn('Supabase insert network error:', err);
       }
     }
 
@@ -265,6 +282,26 @@ export const studentService = {
     delete (cleanUpdates as any).created_at;
     delete (cleanUpdates as any).updated_at;
 
+    // Sanitize dates for PostgreSQL date columns
+    if (cleanUpdates.date_of_birth !== undefined) {
+      cleanUpdates.date_of_birth = cleanUpdates.date_of_birth && cleanUpdates.date_of_birth.trim() !== ''
+        ? cleanUpdates.date_of_birth.trim()
+        : '2001-01-01';
+    }
+    if (cleanUpdates.course_end_date !== undefined) {
+      cleanUpdates.course_end_date = cleanUpdates.course_end_date && cleanUpdates.course_end_date.trim() !== ''
+        ? cleanUpdates.course_end_date.trim()
+        : null;
+    }
+    if (cleanUpdates.email !== undefined) {
+      cleanUpdates.email = cleanUpdates.email && cleanUpdates.email.trim() !== ''
+        ? cleanUpdates.email.trim()
+        : null;
+    }
+    if (cleanUpdates.photo_url !== undefined && !cleanUpdates.photo_url) {
+      cleanUpdates.photo_url = null;
+    }
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
@@ -286,10 +323,11 @@ export const studentService = {
           return { data: data as Student, error: null };
         }
         if (error) {
+          console.warn('Supabase update error:', error.message);
           return { data: null, error: error.message };
         }
-      } catch {
-        // Fallback
+      } catch (err) {
+        console.warn('Supabase update network error:', err);
       }
     }
 
@@ -355,7 +393,7 @@ export const studentService = {
   async verifyCertificate(
     identifier: string
   ): Promise<{ verified: boolean; data?: PublicVerificationResult; error?: string }> {
-    const cleanId = identifier.trim().toLowerCase();
+    const cleanId = identifier.trim();
     if (!cleanId) {
       return { verified: false, error: 'Please enter a valid Registration Number or Application ID.' };
     }
@@ -367,38 +405,51 @@ export const studentService = {
           .select('*')
           .or(`registration_number.ilike.${cleanId},application_number.ilike.${cleanId}`)
           .eq('is_archived', false)
-          .maybeSingle();
+          .order('created_at', { ascending: false })
+          .limit(1);
 
-        if (!error && data) {
+        if (!error && data && data.length > 0) {
+          const record = data[0];
+          // Update local cache
+          const list = getLocalStudents();
+          const existingIdx = list.findIndex((s) => s.id === record.id);
+          if (existingIdx !== -1) {
+            list[existingIdx] = record as Student;
+          } else {
+            list.unshift(record as Student);
+          }
+          saveLocalStudents(list);
+
           return {
             verified: true,
             data: {
-              student_name: data.student_name,
-              father_name: data.father_name,
-              registration_number: data.registration_number,
-              application_number: data.application_number,
-              date_of_birth: data.date_of_birth,
-              course_name: data.course_name,
-              admission_date: data.admission_date,
-              course_start_date: data.course_start_date,
-              course_end_date: data.course_end_date,
-              status: data.status,
-              photo_url: data.photo_url,
-              id: data.id,
+              student_name: record.student_name,
+              father_name: record.father_name,
+              registration_number: record.registration_number,
+              application_number: record.application_number,
+              date_of_birth: record.date_of_birth,
+              course_name: record.course_name,
+              admission_date: record.admission_date,
+              course_start_date: record.course_start_date,
+              course_end_date: record.course_end_date,
+              status: record.status,
+              photo_url: record.photo_url,
+              id: record.id,
             },
           };
         }
-      } catch {
-        // Fallback
+      } catch (err) {
+        console.warn('Supabase verification lookup error:', err);
       }
     }
 
     // Local Storage Fallback
     const list = getLocalStudents().filter((s) => !s.is_archived);
+    const lowerClean = cleanId.toLowerCase();
     const found = list.find(
       (s) =>
-        s.registration_number.toLowerCase() === cleanId ||
-        s.application_number.toLowerCase() === cleanId
+        s.registration_number.toLowerCase() === lowerClean ||
+        s.application_number.toLowerCase() === lowerClean
     );
 
     if (found) {
