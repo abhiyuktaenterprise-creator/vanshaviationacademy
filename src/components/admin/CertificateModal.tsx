@@ -18,7 +18,9 @@ import {
   QrCode,
   Layers,
   PenTool,
+  Loader2,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { Student } from '@/types/student';
 import {
   renderLuxuryCertificate,
@@ -138,15 +140,71 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     };
   }, [formData, templateType, open]);
 
-  // Handle Download High-Res PNG
-  const handleDownloadPNG = () => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
+  const [downloading, setDownloading] = useState(false);
+
+  // Helper to trigger safe download on mobile and desktop
+  const triggerDownload = (url: string, filename: string) => {
     const link = document.createElement('a');
-    const safeName = (formData.studentName || 'Vansh_Cadet').trim().replace(/[^a-zA-Z0-9]/g, '_');
-    link.download = `Vansh_Aviation_Certificate_${safeName}.png`;
-    link.href = canvas.toDataURL('image/png', 1.0);
+    link.href = url;
+    link.download = filename;
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
     link.click();
+    setTimeout(() => {
+      document.body.removeChild(link);
+    }, 400);
+  };
+
+  // Handle Download High-Res PNG with mobile compatibility & blob support
+  const handleDownloadPNG = () => {
+    if (!canvasRef.current) {
+      toast.error('Certificate canvas is still rendering. Please wait a moment.');
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    const safeName = (formData.studentName || 'Vansh_Cadet').trim().replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Vansh_Aviation_Certificate_${safeName}.png`;
+
+    setDownloading(true);
+    const toastId = toast.loading('Generating high-resolution PNG...');
+
+    try {
+      if (canvas.toBlob) {
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              const dataUrl = canvas.toDataURL('image/png', 1.0);
+              triggerDownload(dataUrl, filename);
+            } else {
+              const blobUrl = URL.createObjectURL(blob);
+              triggerDownload(blobUrl, filename);
+              setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+            }
+            toast.success('High-definition certificate downloaded!', { id: toastId });
+            setDownloading(false);
+          },
+          'image/png',
+          1.0
+        );
+      } else {
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
+        triggerDownload(dataUrl, filename);
+        toast.success('High-definition certificate downloaded!', { id: toastId });
+        setDownloading(false);
+      }
+    } catch (err) {
+      console.error('Error downloading certificate:', err);
+      try {
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
+        triggerDownload(dataUrl, filename);
+        toast.success('High-definition certificate downloaded!', { id: toastId });
+      } catch (fallbackErr) {
+        toast.error('Failed to download certificate image', { id: toastId });
+      } finally {
+        setDownloading(false);
+      }
+    }
   };
 
   // Handle Print / PDF
@@ -154,7 +212,10 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     if (!canvasRef.current) return;
     const dataUrl = canvasRef.current.toDataURL('image/png', 1.0);
     const win = window.open('', '_blank');
-    if (!win) return;
+    if (!win) {
+      toast.error('Popup blocked. Please allow popups to print/save certificate as PDF.');
+      return;
+    }
 
     win.document.write(`
       <!DOCTYPE html>
@@ -191,33 +252,66 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[92vh] flex flex-col p-0 overflow-hidden bg-slate-900 border-slate-800 text-white shadow-2xl">
+      <DialogContent className="w-[96vw] sm:w-[94vw] max-w-6xl max-h-[92vh] flex flex-col p-0 overflow-hidden bg-slate-900 border-slate-800 text-white shadow-2xl rounded-2xl sm:rounded-xl">
         {/* Header */}
-        <DialogHeader className="p-4 sm:p-5 border-b border-slate-800 shrink-0 flex flex-row items-center justify-between gap-3 bg-slate-950/80">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-slate-900 flex items-center justify-center text-white shadow-md">
-              <Award className="w-5 h-5 text-amber-400" />
+        <DialogHeader className="p-3.5 sm:p-5 border-b border-slate-800 shrink-0 bg-slate-950/90 pr-12 md:pr-5">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div className="flex items-start sm:items-center space-x-3 min-w-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-slate-900 flex items-center justify-center text-white shadow-md shrink-0">
+                <Award className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <DialogTitle className="text-sm sm:text-lg font-bold text-white flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span>Official Flight Certificate Generator</span>
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 whitespace-nowrap">
+                    HD • Raj Pratap Singh
+                  </span>
+                </DialogTitle>
+                <DialogDescription className="text-[11px] sm:text-xs text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">
+                  Authorized signatory: Raj Pratap Singh • Direct verification QR & 2400x1700 HD Download.
+                </DialogDescription>
+              </div>
             </div>
-            <div>
-              <DialogTitle className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                <span>Official Flight Certificate Generator</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">
-                  Modern Luxury HD • Raj Pratap Singh
-                </span>
-              </DialogTitle>
-              <DialogDescription className="text-xs text-slate-400">
-                Authorized signatory: Raj Pratap Singh • Direct verification QR & 2400x1700 HD Download.
-              </DialogDescription>
+
+            {/* Desktop / Tablet Header Actions */}
+            <div className="hidden md:flex items-center gap-2 shrink-0">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handlePrint}
+                disabled={downloading}
+                className="text-xs bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
+                Print / PDF
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleDownloadPNG}
+                disabled={downloading}
+                className="text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold cursor-pointer shadow-md transition-all active:scale-95"
+              >
+                {downloading ? (
+                  <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                ) : (
+                  <Download className="w-3.5 h-3.5 mr-1" />
+                )}
+                Download (HD PNG)
+              </Button>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Mobile Header Quick Actions */}
+          <div className="flex md:hidden items-center gap-2 pt-1 w-full">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={handlePrint}
-              className="text-xs bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white cursor-pointer"
+              disabled={downloading}
+              className="flex-1 text-xs h-9 bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white"
             >
               <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
               Print / PDF
@@ -226,16 +320,21 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               type="button"
               size="sm"
               onClick={handleDownloadPNG}
-              className="text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold cursor-pointer shadow-md"
+              disabled={downloading}
+              className="flex-1 text-xs h-9 bg-amber-600 hover:bg-amber-500 text-white font-bold shadow-md active:scale-95"
             >
-              <Download className="w-3.5 h-3.5 mr-1" />
+              {downloading ? (
+                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <Download className="w-3.5 h-3.5 mr-1.5" />
+              )}
               Download (HD PNG)
             </Button>
           </div>
         </DialogHeader>
 
         {/* Content Body: Left Form Inputs + Right Live Preview */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-950/40">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 bg-slate-950/40">
           {/* Column 1: Editable Fields (5 cols on lg) */}
           <div className="lg:col-span-5 space-y-4 bg-slate-900/90 p-4 rounded-xl border border-slate-800">
             {/* Template Selector */}
@@ -428,7 +527,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           </div>
 
           {/* Column 2: Live Canvas Preview (7 cols on lg) */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 p-4 rounded-xl border border-slate-800 relative min-h-[420px]">
+          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 p-3 sm:p-4 rounded-xl border border-slate-800 relative min-h-[300px] sm:min-h-[420px]">
             {loading && (
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-amber-400 gap-2">
                 <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
@@ -444,13 +543,75 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               />
             </div>
 
-            <div className="mt-3 text-center text-[11px] text-slate-400 flex items-center justify-center gap-4">
-              <span>Resolution: <strong>2400 × 1700 px (300 DPI Ready)</strong></span>
-              <span>•</span>
-              <span>Signatory: <strong className="text-amber-300">Raj Pratap Singh</strong></span>
-              <span>•</span>
-              <span>Format: <strong>High-Definition Canvas PNG</strong></span>
+            {/* Direct Action Buttons under canvas preview */}
+            <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 w-full">
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleDownloadPNG}
+                disabled={downloading}
+                className="w-full sm:w-auto text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold shadow-lg shadow-amber-950/40 px-5 py-2.5 active:scale-95 transition-all"
+              >
+                {downloading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                Download Certificate (HD PNG)
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handlePrint}
+                disabled={downloading}
+                className="w-full sm:w-auto text-xs bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
+              >
+                <Printer className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
+                Print / Save as PDF
+              </Button>
             </div>
+
+            <div className="mt-3 text-center text-[10px] sm:text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+              <span>Resolution: <strong>2400 × 1700 px (300 DPI)</strong></span>
+              <span className="hidden sm:inline">•</span>
+              <span>Signatory: <strong className="text-amber-300">Raj Pratap Singh</strong></span>
+              <span className="hidden sm:inline">•</span>
+              <span>Format: <strong>HD Canvas PNG</strong></span>
+            </div>
+          </div>
+        </div>
+
+        {/* Sticky Action Footer Bar */}
+        <div className="p-3 sm:p-4 border-t border-slate-800 bg-slate-950/95 backdrop-blur shrink-0 flex items-center justify-between gap-3">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>2400 × 1700 High-Resolution Canvas Ready • DGCA Verified</span>
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onOpenChange(false)}
+              className="text-xs bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white"
+            >
+              Close
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleDownloadPNG}
+              disabled={downloading}
+              className="flex-1 sm:flex-initial text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold shadow-md active:scale-95 transition-all"
+            >
+              {downloading ? (
+                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+              ) : (
+                <Download className="w-3.5 h-3.5 mr-1.5" />
+              )}
+              Download (HD PNG)
+            </Button>
           </div>
         </div>
       </DialogContent>
