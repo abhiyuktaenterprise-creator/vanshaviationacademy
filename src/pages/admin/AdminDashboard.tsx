@@ -218,12 +218,14 @@ export const AdminDashboard: React.FC = () => {
   // Open Add modal
   const handleOpenAdd = () => {
     const { registration_number, application_number } = getNextSequentialIds();
+    const today = new Date().toISOString().slice(0, 10);
     setFormData({
       ...initialFormState,
       application_number,
       registration_number,
-      admission_date: new Date().toISOString().slice(0, 10),
-      course_start_date: new Date().toISOString().slice(0, 10),
+      admission_date: today,
+      course_start_date: today,
+      course_end_date: '',
     });
     setIsAddOpen(true);
   };
@@ -754,6 +756,14 @@ export const AdminDashboard: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-4">
                         <span className="font-semibold text-slate-800">{student.course_name}</span>
+                        <div className="text-[11px] text-slate-500 mt-0.5 flex flex-wrap items-center gap-1">
+                          <span>📅 {student.course_start_date || student.admission_date}</span>
+                          {student.course_end_date ? (
+                            <span className="text-emerald-700 font-medium">to {student.course_end_date}</span>
+                          ) : (
+                            <span className="text-amber-600 font-medium">(Ongoing)</span>
+                          )}
+                        </div>
                         {student.flying_hours && (
                           <span className="block text-[11px] text-sky-600">✈️ {student.flying_hours}</span>
                         )}
@@ -990,8 +1000,8 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Row 5: Dates & Status */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Row 5: Admission Date & Status */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-xs font-semibold">Admission Date *</Label>
                   <Input
@@ -999,16 +1009,6 @@ export const AdminDashboard: React.FC = () => {
                     type="date"
                     value={formData.admission_date}
                     onChange={(e) => setFormData({ ...formData, admission_date: e.target.value })}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs font-semibold">Course Start Date *</Label>
-                  <Input
-                    required
-                    type="date"
-                    value={formData.course_start_date}
-                    onChange={(e) => setFormData({ ...formData, course_start_date: e.target.value })}
                     className="mt-1"
                   />
                 </div>
@@ -1028,6 +1028,42 @@ export const AdminDashboard: React.FC = () => {
                       <SelectItem value="Discontinued">Discontinued</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              {/* Row 6: Course Schedule / Training Period */}
+              <div className="p-3.5 bg-sky-50/70 rounded-xl border border-sky-100">
+                <span className="text-[11px] font-bold text-sky-800 uppercase tracking-wider block mb-2">
+                  Course Training Duration (Start & End Dates)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                      Course Start Date *
+                    </Label>
+                    <Input
+                      required
+                      type="date"
+                      value={formData.course_start_date}
+                      onChange={(e) => setFormData({ ...formData, course_start_date: e.target.value })}
+                      className="mt-1 bg-white"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">Commencement date of flight program</span>
+                  </div>
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                      Course End Date
+                    </Label>
+                    <Input
+                      type="date"
+                      value={formData.course_end_date || ''}
+                      onChange={(e) => setFormData({ ...formData, course_end_date: e.target.value })}
+                      className="mt-1 bg-white"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">Graduation / completion date</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1204,8 +1240,8 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Row 5 */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Row 5: Admission Date & Status */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-xs font-semibold">Admission Date</Label>
                   <Input
@@ -1216,16 +1252,7 @@ export const AdminDashboard: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold">Start Date</Label>
-                  <Input
-                    type="date"
-                    value={formData.course_start_date}
-                    onChange={(e) => setFormData({ ...formData, course_start_date: e.target.value })}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs font-semibold">Status</Label>
+                  <Label className="text-xs font-semibold">Training Status</Label>
                   <Select
                     value={formData.status}
                     onValueChange={(val: any) => setFormData({ ...formData, status: val })}
@@ -1240,6 +1267,42 @@ export const AdminDashboard: React.FC = () => {
                       <SelectItem value="Discontinued">Discontinued</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </div>
+
+              {/* Row 6: Course Schedule / Training Period */}
+              <div className="p-3.5 bg-sky-50/70 rounded-xl border border-sky-100">
+                <span className="text-[11px] font-bold text-sky-800 uppercase tracking-wider block mb-2">
+                  Course Training Duration (Start & End Dates)
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                      Course Start Date *
+                    </Label>
+                    <Input
+                      required
+                      type="date"
+                      value={formData.course_start_date}
+                      onChange={(e) => setFormData({ ...formData, course_start_date: e.target.value })}
+                      className="mt-1 bg-white"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">Commencement date of flight program</span>
+                  </div>
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                      Course End Date
+                    </Label>
+                    <Input
+                      type="date"
+                      value={formData.course_end_date || ''}
+                      onChange={(e) => setFormData({ ...formData, course_end_date: e.target.value })}
+                      className="mt-1 bg-white"
+                    />
+                    <span className="text-[11px] text-slate-500 mt-1 block">Graduation / completion date</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1312,6 +1375,20 @@ export const AdminDashboard: React.FC = () => {
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Admission Date</span>
                   <span className="font-bold text-slate-800">{selectedStudent.admission_date}</span>
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-sky-700 uppercase block">Course Start Date</span>
+                  <span className="font-bold text-slate-800">{selectedStudent.course_start_date || 'N/A'}</span>
+                </div>
+                <div>
+                  <span className="text-[11px] font-bold text-sky-700 uppercase block">Course End Date</span>
+                  <span className="font-bold text-slate-800">
+                    {selectedStudent.course_end_date ? (
+                      <span className="text-emerald-700 font-semibold">{selectedStudent.course_end_date}</span>
+                    ) : (
+                      <span className="text-amber-600 font-medium text-xs">In Training / Ongoing</span>
+                    )}
+                  </span>
                 </div>
                 <div>
                   <span className="text-[11px] font-bold text-slate-400 uppercase block">Contact Phone</span>

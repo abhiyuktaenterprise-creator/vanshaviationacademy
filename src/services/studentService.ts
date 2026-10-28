@@ -435,6 +435,9 @@ export const studentService = {
               status: record.status,
               photo_url: record.photo_url,
               id: record.id,
+              flying_hours: record.flying_hours,
+              aircraft_type: record.aircraft_type,
+              dgca_computer_no: record.dgca_computer_no,
             },
           };
         }
@@ -468,6 +471,9 @@ export const studentService = {
           status: found.status,
           photo_url: found.photo_url,
           id: found.id,
+          flying_hours: found.flying_hours,
+          aircraft_type: found.aircraft_type,
+          dgca_computer_no: found.dgca_computer_no,
         },
       };
     }

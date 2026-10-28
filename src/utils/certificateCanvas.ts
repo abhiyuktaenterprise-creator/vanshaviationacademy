@@ -41,15 +41,32 @@ export const loadImg = (src: string): Promise<HTMLImageElement> => {
 export const renderVanshClassicCertificate = async (
   canvas: HTMLCanvasElement,
   data: CertificateData,
-  qrSrc: string = '/vansh-qr-code.png'
+  qrSrc: string = '/vansh-qr-code.png',
+  scale: number = 1.5
 ): Promise<void> => {
-  const W = 2400;
-  const H = 1650;
-  canvas.width = W;
-  canvas.height = H;
+  if (typeof document !== 'undefined' && document.fonts) {
+    try {
+      await document.fonts.ready;
+    } catch {
+      // proceed
+    }
+  }
+
+  const BASE_W = 2400;
+  const BASE_H = 1650;
+  const W = BASE_W;
+  const H = BASE_H;
+
+  canvas.width = Math.round(BASE_W * scale);
+  canvas.height = Math.round(BASE_H * scale);
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
+
+  // Ultra-crisp high-quality image smoothing & 300 DPI canvas scaling
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.scale(scale, scale);
 
   // 1. Crisp White Canvas
   ctx.fillStyle = '#FFFFFF';
@@ -324,15 +341,32 @@ export const renderLuxuryCertificate = async (
   canvas: HTMLCanvasElement,
   data: CertificateData,
   logoSrc: string,
-  signatureSrc?: string
+  signatureSrc?: string,
+  scale: number = 1.5
 ): Promise<void> => {
-  const W = 2400;
-  const H = 1700;
-  canvas.width = W;
-  canvas.height = H;
+  if (typeof document !== 'undefined' && document.fonts) {
+    try {
+      await document.fonts.ready;
+    } catch {
+      // proceed
+    }
+  }
+
+  const BASE_W = 2400;
+  const BASE_H = 1700;
+  const W = BASE_W;
+  const H = BASE_H;
+
+  canvas.width = Math.round(BASE_W * scale);
+  canvas.height = Math.round(BASE_H * scale);
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
+
+  // Ultra-crisp high-quality image smoothing & 300 DPI canvas scaling
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.scale(scale, scale);
 
   // Distinctive Vansh Aviation Academy Color Palette
   // Inspired by Vansh Aviation original certificate: Rich Royal Pilot Blue, Warm Bronze Gold & Slate Navy

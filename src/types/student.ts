@@ -41,6 +41,9 @@ export interface PublicVerificationResult {
   status: string;
   photo_url?: string | null;
   id?: string;
+  flying_hours?: string;
+  aircraft_type?: string;
+  dgca_computer_no?: string;
 }
 
 export interface VerificationResult {

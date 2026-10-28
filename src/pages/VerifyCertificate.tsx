@@ -23,6 +23,19 @@ import { StudentRecord } from '@/types/student';
 
 const logoImage = '/vanshaviation-logo.png';
 
+const formatDateDisplay = (dateStr?: string | null): string | null => {
+  if (!dateStr) return null;
+  const trimmed = dateStr.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    const [year, month, day] = trimmed.split('-');
+    const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+    if (!isNaN(date.getTime())) {
+      return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+  }
+  return trimmed;
+};
+
 export const VerifyCertificate = () => {
   const [searchParams] = useSearchParams();
   const [identifier, setIdentifier] = useState(searchParams.get('q') || '');
@@ -330,8 +343,26 @@ export const VerifyCertificate = () => {
                 </div>
               </div>
 
+              {/* Cadet Profile Preview if photo exists */}
+              {result.photo_url && (
+                <div className="flex items-center gap-4 p-4 bg-sky-50/80 rounded-2xl border border-sky-100 mb-6">
+                  <img
+                    src={result.photo_url}
+                    alt={result.student_name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-sky-500 shadow-sm shrink-0"
+                  />
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-sky-700 block">
+                      Enrolled Flight Cadet Record
+                    </span>
+                    <h3 className="text-xl font-black text-slate-900">{result.student_name}</h3>
+                    <p className="text-xs text-slate-600">S/O, D/O: {result.father_name}</p>
+                  </div>
+                </div>
+              )}
+
               {/* Student & Course Particulars Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
                 <div>
                   <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
                     Student Full Name
@@ -377,6 +408,81 @@ export const VerifyCertificate = () => {
                   </span>
                 </div>
 
+                <div>
+                  <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
+                    Date of Admission
+                  </span>
+                  <span className="text-sm font-bold text-slate-800 block">
+                    {formatDateDisplay(result.admission_date) || result.admission_date || 'N/A'}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
+                    DGCA Computer / File Ref
+                  </span>
+                  <span className="text-sm font-mono font-bold text-slate-800 block">
+                    {result.dgca_computer_no || 'DGCA Verified'}
+                  </span>
+                </div>
+
+                {/* Course Start Date */}
+                <div className="p-3 bg-white rounded-xl border border-sky-100 shadow-2xs">
+                  <span className="text-xs font-bold uppercase text-sky-700 flex items-center gap-1.5 mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-sky-600" />
+                    Course Start Date
+                  </span>
+                  <span className="text-base font-extrabold text-slate-900 block">
+                    {formatDateDisplay(result.course_start_date) || result.course_start_date || 'N/A'}
+                  </span>
+                  {result.course_start_date && (
+                    <span className="text-[11px] text-slate-400 font-mono block mt-0.5">
+                      ISO: {result.course_start_date}
+                    </span>
+                  )}
+                </div>
+
+                {/* Course End Date */}
+                <div className="p-3 bg-white rounded-xl border border-emerald-100 shadow-2xs">
+                  <span className="text-xs font-bold uppercase text-emerald-700 flex items-center gap-1.5 mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+                    Course End Date
+                  </span>
+                  {result.course_end_date ? (
+                    <>
+                      <span className="text-base font-extrabold text-slate-900 block">
+                        {formatDateDisplay(result.course_end_date) || result.course_end_date}
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-mono block mt-0.5">
+                        ISO: {result.course_end_date}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="inline-block text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-md mt-0.5">
+                      In Training / Ongoing Course
+                    </span>
+                  )}
+                </div>
+
+                {/* Training Duration / Schedule */}
+                <div className="md:col-span-2 p-3 bg-slate-100/80 rounded-xl border border-slate-200">
+                  <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
+                    Training Duration & Schedule
+                  </span>
+                  <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-sky-600" />
+                    <span>
+                      {formatDateDisplay(result.course_start_date) || result.course_start_date || 'N/A'}
+                    </span>
+                    <span className="text-slate-400">→</span>
+                    <span>
+                      {result.course_end_date
+                        ? (formatDateDisplay(result.course_end_date) || result.course_end_date)
+                        : 'Present (In Progress)'}
+                    </span>
+                  </span>
+                </div>
+
                 {result.flying_hours && (
                   <div>
                     <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
@@ -398,24 +504,6 @@ export const VerifyCertificate = () => {
                     </span>
                   </div>
                 )}
-
-                <div>
-                  <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
-                    Training Duration / Schedule
-                  </span>
-                  <span className="text-sm font-semibold text-slate-700 block">
-                    {result.course_start_date} to {result.course_end_date}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-xs font-semibold uppercase text-slate-500 block mb-1">
-                    DGCA Computer / File Ref
-                  </span>
-                  <span className="text-sm font-mono font-bold text-slate-800 block">
-                    {result.dgca_computer_no || 'DGCA Verified'}
-                  </span>
-                </div>
               </div>
 
               {/* Official Seal & Signature Section */}

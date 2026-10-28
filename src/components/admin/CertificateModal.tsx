@@ -19,8 +19,11 @@ import {
   Layers,
   PenTool,
   Loader2,
+  FileDown,
+  Share2,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
 import { Student } from '@/types/student';
 import {
   renderLuxuryCertificate,
@@ -207,6 +210,101 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     }
   };
 
+  // Handle Download High-Definition A4 PDF (Lossless, perfect for WhatsApp sharing)
+  const handleDownloadPDF = () => {
+    if (!canvasRef.current) {
+      toast.error('Certificate canvas is still rendering. Please wait a moment.');
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    const safeName = (formData.studentName || 'Vansh_Cadet').trim().replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Vansh_Aviation_Certificate_${safeName}.pdf`;
+
+    setDownloading(true);
+    const toastId = toast.loading('Generating 300 DPI print-ready A4 PDF...');
+
+    try {
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
+
+      pdf.addImage(dataUrl, 'PNG', 0, 0, 297, 210, undefined, 'FAST');
+      pdf.save(filename);
+      toast.success('Ultra-clear PDF downloaded! (Send as Document on WhatsApp to avoid any compression)', {
+        id: toastId,
+        duration: 5000,
+      });
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+      toast.error('Failed to generate PDF. You can download the HD PNG instead.', { id: toastId });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  // Handle Direct Web Share (Mobile / Tablet / Desktop native sharing)
+  const handleShareCertificate = async () => {
+    if (!canvasRef.current) {
+      toast.error('Certificate canvas is still rendering. Please wait a moment.');
+      return;
+    }
+
+    const canvas = canvasRef.current;
+    const safeName = (formData.studentName || 'Vansh_Cadet').trim().replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Vansh_Aviation_Certificate_${safeName}.pdf`;
+
+    setDownloading(true);
+    const toastId = toast.loading('Preparing certificate for sharing...');
+
+    try {
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
+      pdf.addImage(dataUrl, 'PNG', 0, 0, 297, 210, undefined, 'FAST');
+      const pdfBlob = pdf.output('blob');
+      const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
+
+      if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+        toast.dismiss(toastId);
+        await navigator.share({
+          title: `Official Aviation Certificate - ${formData.studentName}`,
+          text: `Official Vansh Aviation Academy Certificate for ${formData.studentName} (${formData.registrationNumber})`,
+          files: [pdfFile],
+        });
+        toast.success('Certificate shared successfully!');
+      } else {
+        // Fallback: Trigger download & copy verification link
+        triggerDownload(URL.createObjectURL(pdfBlob), filename);
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://vanshaviationacademy.com';
+        const verifyUrl = `${origin}/verify?q=${encodeURIComponent(formData.registrationNumber)}`;
+        try {
+          await navigator.clipboard.writeText(verifyUrl);
+          toast.success('PDF downloaded & verification link copied to clipboard!', { id: toastId });
+        } catch {
+          toast.success('PDF certificate downloaded!', { id: toastId });
+        }
+      }
+    } catch (err: any) {
+      if (err.name !== 'AbortError') {
+        console.error('Share error:', err);
+        toast.error('Sharing canceled or not supported on this device.', { id: toastId });
+      } else {
+        toast.dismiss(toastId);
+      }
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   // Handle Print / PDF
   const handlePrint = () => {
     if (!canvasRef.current) return;
@@ -279,12 +377,35 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 type="button"
                 variant="outline"
                 size="sm"
+                onClick={handleShareCertificate}
+                disabled={downloading}
+                className="text-xs bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white cursor-pointer"
+                title="Share certificate directly via WhatsApp / Native Share"
+              >
+                <Share2 className="w-3.5 h-3.5 mr-1 text-emerald-400" />
+                Share
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 onClick={handlePrint}
                 disabled={downloading}
                 className="text-xs bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                Print / PDF
+                Print
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleDownloadPDF}
+                disabled={downloading}
+                className="text-xs bg-sky-600 hover:bg-sky-500 text-white font-bold cursor-pointer shadow-md transition-all active:scale-95"
+                title="Download uncompressed 300 DPI A4 PDF (No WhatsApp compression)"
+              >
+                <FileDown className="w-3.5 h-3.5 mr-1" />
+                Download PDF
               </Button>
               <Button
                 type="button"
@@ -292,6 +413,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 onClick={handleDownloadPNG}
                 disabled={downloading}
                 className="text-xs bg-amber-600 hover:bg-amber-500 text-white font-bold cursor-pointer shadow-md transition-all active:scale-95"
+                title="Download 3600x2550 Ultra-HD PNG"
               >
                 {downloading ? (
                   <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
@@ -304,17 +426,26 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           </div>
 
           {/* Mobile Header Quick Actions */}
-          <div className="flex md:hidden items-center gap-2 pt-1 w-full">
+          <div className="flex md:hidden items-center gap-1.5 pt-1 w-full">
             <Button
               type="button"
-              variant="outline"
               size="sm"
-              onClick={handlePrint}
+              onClick={handleShareCertificate}
               disabled={downloading}
-              className="flex-1 text-xs h-9 bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white"
+              className="flex-1 text-xs h-9 bg-emerald-700 hover:bg-emerald-600 text-white font-bold shadow-md active:scale-95"
             >
-              <Printer className="w-3.5 h-3.5 mr-1 text-slate-400" />
-              Print / PDF
+              <Share2 className="w-3.5 h-3.5 mr-1" />
+              Share
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              className="flex-1 text-xs h-9 bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-md active:scale-95"
+            >
+              <FileDown className="w-3.5 h-3.5 mr-1" />
+              PDF
             </Button>
             <Button
               type="button"
@@ -324,11 +455,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               className="flex-1 text-xs h-9 bg-amber-600 hover:bg-amber-500 text-white font-bold shadow-md active:scale-95"
             >
               {downloading ? (
-                <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
               ) : (
-                <Download className="w-3.5 h-3.5 mr-1.5" />
+                <Download className="w-3.5 h-3.5 mr-1" />
               )}
-              Download (HD PNG)
+              PNG
             </Button>
           </div>
         </DialogHeader>
@@ -480,6 +611,27 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 </div>
               </div>
 
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label className="text-slate-300 text-xs font-medium">Course Start Date</Label>
+                  <Input
+                    type="date"
+                    value={formData.courseStartDate || ''}
+                    onChange={(e) => setFormData({ ...formData, courseStartDate: e.target.value })}
+                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-mono"
+                  />
+                </div>
+                <div>
+                  <Label className="text-slate-300 text-xs font-medium">Course End Date</Label>
+                  <Input
+                    type="date"
+                    value={formData.courseEndDate || ''}
+                    onChange={(e) => setFormData({ ...formData, courseEndDate: e.target.value })}
+                    className="bg-slate-950 border-slate-800 text-white text-xs mt-1 focus:border-amber-400 font-mono"
+                  />
+                </div>
+              </div>
+
               <div>
                 <Label className="text-slate-300 text-xs font-medium">Campus Location</Label>
                 <Input
@@ -531,7 +683,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             {loading && (
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-amber-400 gap-2">
                 <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-xs font-medium text-slate-300">Rendering 2400x1700 Certificate...</span>
+                <span className="text-xs font-medium text-slate-300">Rendering 3600 × 2550 Ultra-HD Certificate...</span>
               </div>
             )}
 
@@ -539,25 +691,48 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <canvas
                 ref={canvasRef}
                 className="w-full h-auto block select-none"
-                style={{ imageRendering: 'crisp-edges' }}
+                style={{ imageRendering: 'auto', WebkitFontSmoothing: 'antialiased' }}
               />
             </div>
 
             {/* Direct Action Buttons under canvas preview */}
-            <div className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 w-full">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleDownloadPDF}
+                disabled={downloading}
+                className="w-full text-xs sm:text-sm bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-lg shadow-sky-950/40 px-4 py-2.5 active:scale-95 transition-all"
+                title="Download 300 DPI A4 PDF - Never compressed by WhatsApp"
+              >
+                <FileDown className="w-4 h-4 mr-2" />
+                Download PDF (Lossless)
+              </Button>
               <Button
                 type="button"
                 size="sm"
                 onClick={handleDownloadPNG}
                 disabled={downloading}
-                className="w-full sm:w-auto text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold shadow-lg shadow-amber-950/40 px-5 py-2.5 active:scale-95 transition-all"
+                className="w-full text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold shadow-lg shadow-amber-950/40 px-4 py-2.5 active:scale-95 transition-all"
+                title="Download 3600x2550 Ultra-HD PNG"
               >
                 {downloading ? (
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 ) : (
                   <Download className="w-4 h-4 mr-2" />
                 )}
-                Download Certificate (HD PNG)
+                Download HD PNG (3600px)
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleShareCertificate}
+                disabled={downloading}
+                className="w-full text-xs bg-slate-900 border-slate-700 text-emerald-400 hover:bg-slate-800 hover:text-emerald-300"
+              >
+                <Share2 className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
+                Share Directly (WhatsApp / AirDrop)
               </Button>
               <Button
                 type="button"
@@ -565,19 +740,28 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 size="sm"
                 onClick={handlePrint}
                 disabled={downloading}
-                className="w-full sm:w-auto text-xs bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
+                className="w-full text-xs bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800"
               >
                 <Printer className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
-                Print / Save as PDF
+                Print / Save via Browser
               </Button>
             </div>
 
+            {/* WhatsApp Anti-Pixelation Advisory Note */}
+            <div className="mt-3.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-left flex items-start gap-2.5 w-full">
+              <span className="text-lg shrink-0 mt-0.5">💡</span>
+              <div className="text-[11px] leading-relaxed text-amber-200">
+                <strong className="text-amber-100 block mb-0.5 font-bold">Why do students say certificates are pixelated?</strong>
+                WhatsApp automatically compresses standard photos into low resolution. Always use <strong>"Download PDF"</strong> or share as a <strong>"Document"</strong> on WhatsApp so students receive the original 100% loss-free, crystal-clear 300 DPI vector certificate.
+              </div>
+            </div>
+
             <div className="mt-3 text-center text-[10px] sm:text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-2 sm:gap-4">
-              <span>Resolution: <strong>2400 × 1700 px (300 DPI)</strong></span>
+              <span>Resolution: <strong className="text-white">3600 × 2550 px (300 DPI Ultra-HD)</strong></span>
               <span className="hidden sm:inline">•</span>
               <span>Signatory: <strong className="text-amber-300">Raj Pratap Singh</strong></span>
               <span className="hidden sm:inline">•</span>
-              <span>Format: <strong>HD Canvas PNG</strong></span>
+              <span>Formats: <strong>Vector A4 PDF & Ultra-HD PNG</strong></span>
             </div>
           </div>
         </div>
@@ -586,7 +770,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         <div className="p-3 sm:p-4 border-t border-slate-800 bg-slate-950/95 backdrop-blur shrink-0 flex items-center justify-between gap-3">
           <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>2400 × 1700 High-Resolution Canvas Ready • DGCA Verified</span>
+            <span>3600 × 2550 (300 DPI) High-Resolution Canvas Ready • DGCA Verified</span>
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
             <Button
@@ -597,6 +781,16 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               className="text-xs bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white"
             >
               Close
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleDownloadPDF}
+              disabled={downloading}
+              className="text-xs bg-sky-600 hover:bg-sky-500 text-white font-bold shadow-md active:scale-95 transition-all"
+            >
+              <FileDown className="w-3.5 h-3.5 mr-1.5" />
+              Download PDF
             </Button>
             <Button
               type="button"
