@@ -92,7 +92,7 @@ This comprehensive SEO strategy is designed to outrank competitors like Flytech 
       "name": "Vansh Aviation Academy",
       "description": "DGCA approved pilot training academy in Indore offering CPL, PPL and ground school programs",
       "url": "https://vanshaviationacademy.com",
-      "telephone": "+91-9506891936",
+      "telephone": "+91-6367608244 ",
       "email": "aviationacademyvansh@gmail.com",
       "address": {
         "@type": "PostalAddress",
@@ -340,7 +340,7 @@ const EnhancedContactForm = () => {
       </button>
       
       <p className="text-sm text-gray-600 mt-2">
-        📞 Call now: +91 9506891936 | ✈️ DGCA Approved Training
+        📞 Call now: +91 6367608244  | ✈️ DGCA Approved Training
       </p>
     </form>
   );

@@ -49,7 +49,7 @@ export const LeadCaptureForm = () => {
     const waText = encodeURIComponent(
       `Hello Vansh Aviation Academy! I have submitted an inquiry for ${formData.course}. My Name: ${formData.fullName}, Phone: ${formData.phone}.`
     );
-    window.open(`https://wa.me/919506891936?text=${waText}`, '_blank');
+    window.open(`https://wa.me/916367608244 ?text=${waText}`, '_blank');
   };
 
   return (
@@ -112,10 +112,10 @@ export const LeadCaptureForm = () => {
                   <div>
                     <div className="text-[11px] font-bold text-slate-400 uppercase">Admissions Helpline</div>
                     <a 
-                      href="tel:+919506891936" 
+                      href="tel:+916367608244 " 
                       className="text-base font-bold text-white hover:text-sky-400 transition-colors mt-0.5 block"
                     >
-                      +91 9506891936
+                      +91 6367608244 
                     </a>
                     <span className="text-xs text-slate-400">Available Mon - Sat (9:00 AM - 6:30 PM)</span>
                   </div>

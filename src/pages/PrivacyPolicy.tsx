@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
               </p>
               <ul className="list-disc pl-6 space-y-1.5 text-slate-600">
                 <li>Inquire about our pilot training programs (CPL, PPL, Ground School)</li>
-                <li>Contact us via phone (+91 9506891936) or email (aviationacademyvansh@gmail.com)</li>
+                <li>Contact us via phone (+91 6367608244 ) or email (aviationacademyvansh@gmail.com)</li>
                 <li>Visit our facility in Indore, Madhya Pradesh</li>
                 <li>Subscribe to our aviation training updates</li>
                 <li>Apply for DGCA-approved courses</li>
@@ -89,7 +89,7 @@ const PrivacyPolicy = () => {
               <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-1 text-xs">
                 <p className="text-aviation-navy font-bold text-sm">Vansh Aviation Academy</p>
                 <p className="text-slate-600">2nd floor Ideal techno building behind konark hotel PU4 Vijay Nagar, Indore (M.P.)</p>
-                <p className="text-slate-600">Phone: +91 9506891936</p>
+                <p className="text-slate-600">Phone: +91 6367608244 </p>
                 <p className="text-slate-600">Email: aviationacademyvansh@gmail.com</p>
               </div>
             </section>

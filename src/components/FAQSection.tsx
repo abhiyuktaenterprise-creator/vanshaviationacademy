@@ -103,11 +103,11 @@ export const FAQSection = () => {
             </div>
           </div>
           <a
-            href="tel:+919506891936"
+            href="tel:+916367608244 "
             className="inline-flex items-center gap-2 bg-slate-900 hover:bg-sky-600 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-sm transition-colors whitespace-nowrap"
           >
             <Phone className="w-3.5 h-3.5 text-sky-400" />
-            <span>Call: +91 9506891936</span>
+            <span>Call: +91 6367608244 </span>
           </a>
         </div>
       </div>

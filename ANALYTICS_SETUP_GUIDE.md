@@ -62,7 +62,7 @@ function trackContactSubmission(formType) {
 function trackPhoneCall() {
   gtag('event', 'phone_call', {
     'event_category': 'Contact',
-    'event_label': '+91-9506891936',
+    'event_label': '+91-6367608244 ',
     'value': 1
   });
 }
@@ -151,11 +151,11 @@ const TrackablePhoneLink = () => {
 
   return (
     <a 
-      href="tel:+919506891936" 
+      href="tel:+916367608244 " 
       onClick={handlePhoneClick}
       className="text-aviation-gold hover:text-aviation-navy"
     >
-      +91 9506891936
+      +91 6367608244 
     </a>
   );
 };
@@ -214,7 +214,7 @@ Add this structured data to your homepage for better search appearance:
         "latitude": 22.7196,
         "longitude": 75.8577
       },
-      "telephone": "+91-9506891936",
+      "telephone": "+91-6367608244 ",
       "email": "aviationacademyvansh@gmail.com",
       "sameAs": [
         "https://www.facebook.com/vanshaviationacademy",
@@ -232,7 +232,7 @@ Add this structured data to your homepage for better search appearance:
       "name": "Vansh Aviation Academy",
       "image": "https://vanshaviationacademy.com/vanshaviation-logo.png",
       "priceRange": "₹₹₹",
-      "telephone": "+91-9506891936",
+      "telephone": "+91-6367608244 ",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "2nd floor Ideal techno building behind konark hotel PU4 Vijay Nagar",

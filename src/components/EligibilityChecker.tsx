@@ -144,11 +144,11 @@ export const EligibilityChecker = () => {
                         Book Personal Flight Assessment
                       </a>
                       <a
-                        href="tel:+919506891936"
+                        href="tel:+916367608244 "
                         className="inline-flex items-center gap-1.5 bg-white text-slate-800 border border-slate-300 hover:bg-slate-100 text-xs font-bold px-4 py-2.5 rounded-xl"
                       >
                         <Phone className="w-3.5 h-3.5 text-sky-600" />
-                        Call Counsellor: +91 9506891936
+                        Call Counsellor: +91 6367608244 
                       </a>
                     </div>
                   </div>

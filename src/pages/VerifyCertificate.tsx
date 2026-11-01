@@ -201,7 +201,7 @@ export const VerifyCertificate = () => {
                   <div>{error}</div>
                   <div className="mt-2 text-xs text-red-300">
                     Need help? Contact the registrar office at{' '}
-                    <a href="tel:+919506891936" className="font-bold underline text-white">+91 9506891936</a>.
+                    <a href="tel:+916367608244 " className="font-bold underline text-white">+91 6367608244 </a>.
                   </div>
                 </div>
               </div>
@@ -552,7 +552,7 @@ export const VerifyCertificate = () => {
             {/* Card Action Bar (hidden in print) */}
             <div className="print:hidden bg-slate-50 px-6 py-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
               <span className="text-xs text-slate-600">
-                For questions regarding this record, contact the Registrar Office at +91 9506891936.
+                For questions regarding this record, contact the Registrar Office at +91 6367608244 .
               </span>
               <div className="flex items-center gap-2">
                 <button
@@ -579,7 +579,7 @@ export const VerifyCertificate = () => {
         <div className="container mx-auto px-4 text-center">
           <p>© {new Date().getFullYear()} Vansh Aviation Academy. All rights reserved. DGCA Approved Training Institute.</p>
           <p className="mt-1 text-slate-500">
-            PU4 Vijay Nagar, Behind Konark Hotel, Indore, Madhya Pradesh • Phone: +91 9506891936
+            PU4 Vijay Nagar, Behind Konark Hotel, Indore, Madhya Pradesh • Phone: +91 6367608244 
           </p>
         </div>
       </footer>

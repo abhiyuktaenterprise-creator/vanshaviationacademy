@@ -1,7 +1,7 @@
 import { Phone, MessageCircle } from 'lucide-react';
 
 export const FloatingActions = () => {
-  const whatsappUrl = `https://wa.me/919506891936?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/916367608244 ?text=${encodeURIComponent(
     'Hello Vansh Aviation Academy, I would like to inquire about Commercial Pilot License (CPL) and Ground School courses.'
   )}`;
 
@@ -23,7 +23,7 @@ export const FloatingActions = () => {
 
       {/* Floating Quick Call Button for Mobile */}
       <a
-        href="tel:+919506891936"
+        href="tel:+916367608244 "
         aria-label="Call Vansh Aviation Academy"
         className="sm:hidden flex items-center justify-center w-12 h-12 bg-aviation-navy text-aviation-gold rounded-full shadow-2xl border-2 border-white/20 hover:scale-105 transition-all"
       >

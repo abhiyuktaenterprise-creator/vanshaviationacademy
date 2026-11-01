@@ -118,11 +118,11 @@ export const Navbar = ({ activeSection = 'home' }: NavbarProps) => {
 
             {/* Call Admissions Button */}
             <a 
-              href="tel:+919506891936"
+              href="tel:+916367608244 "
               className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-sky-600 text-white px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 shadow-sm hover:shadow"
             >
               <Phone className="w-3.5 h-3.5 text-sky-400" />
-              <span>+91 9506891936</span>
+              <span>+91 6367608244 </span>
             </a>
 
             {/* Admin / Registrar Portal Quick Access */}
@@ -197,11 +197,11 @@ export const Navbar = ({ activeSection = 'home' }: NavbarProps) => {
 
           <div className="pt-2 border-t border-slate-100">
             <a
-              href="tel:+919506891936"
+              href="tel:+916367608244 "
               className="w-full text-center bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm"
             >
               <Phone className="w-3.5 h-3.5 text-sky-400" />
-              Call Admissions: +91 9506891936
+              Call Admissions: +91 6367608244 
             </a>
           </div>
         </div>
