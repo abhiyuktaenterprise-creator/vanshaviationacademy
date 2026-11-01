@@ -93,11 +93,11 @@ export const Hero = () => {
               </a>
 
               <a
-                href="tel:+916367608244 "
+                href="tel:+916367608244"
                 className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-5 py-3 rounded-full text-xs sm:text-sm shadow-sm transition-all duration-200"
               >
                 <Phone className="w-4 h-4 text-sky-400" />
-                <span>Call Admissions: +91 6367608244 </span>
+                <span>Call Admissions: +91 6367608244</span>
               </a>
             </div>
 

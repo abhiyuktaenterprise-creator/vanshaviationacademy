@@ -10,7 +10,7 @@ const ContactInfo = () => {
     {
       icon: Phone,
       label: "Contact",
-      value: "+91 6367608244 "
+      value: "+91 6367608244"
     },
     {
       icon: Mail,
@@ -40,7 +40,7 @@ const ContactInfo = () => {
                     </a>
                   ) : detail.label === "Contact" || detail.label === "Mobile" ? (
                     <a 
-                      href={`tel:${detail.value}`}
+                      href={`tel:${detail.value.replace(/\s+/g, '')}`}
                       className="text-aviation-gold hover:text-aviation-navy transition-colors duration-200"
                     >
                       {detail.value}
