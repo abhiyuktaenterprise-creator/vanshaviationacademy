@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Vansh Aviation Academy Production Supabase Credentials
+// Vansh Aviation Academy Dedicated Production Supabase Credentials
 // Fallback guarantees 100% cloud sync across laptops, mobile devices, Vercel & GitHub Pages
-const DEFAULT_SUPABASE_URL = 'https://iinpblwmxpmveibtfzfd.supabase.co';
-const DEFAULT_SUPABASE_KEY = 'sb_publishable_apT0tJD0b7ut2AswvbNn2g_iQgUurIE';
+const DEFAULT_SUPABASE_URL = 'https://qwzllbfwsuygvwrvwixk.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_NGdoqnv1D4RXYxTKGiWeCQ_nUR1QJxh';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY;

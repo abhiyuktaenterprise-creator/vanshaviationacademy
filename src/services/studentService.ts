@@ -3,51 +3,95 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 const LOCAL_STORAGE_KEY = 'vaa_students_local_registry';
 
-// Default Verified Flight Cadets
+// Default Verified Flight Cadets (Sorted latest entry first)
 const DEFAULT_STUDENTS: Student[] = [
   {
-    id: 'vaa-std-1',
-    registration_number: 'VAA-2025-CPL-01',
-    application_number: 'VAA-APP-2025-01',
-    student_name: 'Rajesh Kumar Verma',
-    father_name: 'Surendra Kumar Verma',
-    date_of_birth: '2001-08-15',
-    mobile_number: '9876543210',
-    email: 'rajesh.verma@example.com',
-    course_name: 'Commercial Pilot License (CPL)',
-    admission_date: '2025-01-15',
-    course_start_date: '2025-02-01',
-    course_end_date: '2026-06-30',
+    id: 'vaa-std-7',
+    registration_number: 'VAA-2026-111',
+    application_number: 'VAA-APP-2026-111',
+    student_name: 'Sanghamitra vilas wasnik',
+    father_name: 'Vilas wasnik',
+    date_of_birth: '2008-08-18',
+    mobile_number: '80559 53347',
+    email: 'pramilawasnik93@gmail.com',
+    course_name: 'Ground Services & Airport Operations',
+    admission_date: '2026-11-14',
+    course_start_date: '2026-08-01',
+    course_end_date: '2026-08-31',
     status: 'Completed',
-    flying_hours: '200 Hours',
-    aircraft_type: 'Cessna 172 Skyhawk',
-    dgca_computer_no: 'C-1049283',
+    flying_hours: null,
+    aircraft_type: null,
+    dgca_computer_no: null,
     photo_url: null,
     is_archived: false,
-    created_at: '2025-01-15T10:00:00.000Z',
-    updated_at: '2025-01-15T10:00:00.000Z'
+    created_at: '2026-11-14T10:00:00.000Z',
+    updated_at: '2026-11-14T10:00:00.000Z'
   },
   {
-    id: 'vaa-std-2',
-    registration_number: 'VAA-2025-PPL-02',
-    application_number: 'VAA-APP-2025-02',
-    student_name: 'Priya Sharma',
-    father_name: 'Dinesh Sharma',
-    date_of_birth: '2002-11-20',
-    mobile_number: '9876543211',
-    email: 'priya.sharma@example.com',
-    course_name: 'Private Pilot License (PPL)',
-    admission_date: '2025-02-10',
-    course_start_date: '2025-03-01',
-    course_end_date: '2025-08-30',
-    status: 'Certified',
-    flying_hours: '50 Hours',
-    aircraft_type: 'Cessna 152',
-    dgca_computer_no: 'P-2039481',
+    id: 'vaa-std-5',
+    registration_number: 'VAA-2026-110',
+    application_number: 'VAA-APP-2026-110',
+    student_name: 'Umesh',
+    father_name: 'Father Name',
+    date_of_birth: '2001-01-01',
+    mobile_number: '9876543210',
+    email: 'umesh@example.com',
+    course_name: 'Commercial Pilot License (CPL)',
+    admission_date: '2026-10-25',
+    course_start_date: '2026-10-25',
+    course_end_date: '2027-10-25',
+    status: 'Completed',
+    flying_hours: null,
+    aircraft_type: null,
+    dgca_computer_no: null,
     photo_url: null,
     is_archived: false,
-    created_at: '2025-02-10T11:00:00.000Z',
-    updated_at: '2025-02-10T11:00:00.000Z'
+    created_at: '2026-10-25T10:00:00.000Z',
+    updated_at: '2026-10-25T10:00:00.000Z'
+  },
+  {
+    id: 'vaa-std-6',
+    registration_number: 'VAA-2026-101',
+    application_number: 'VAA-APP-2026-101',
+    student_name: 'Cadet_2578',
+    father_name: 'Vikramaditya',
+    date_of_birth: '2002-09-15',
+    mobile_number: '',
+    email: null,
+    course_name: 'Commercial Pilot License (CPL)',
+    admission_date: '2026-10-25',
+    course_start_date: '2026-10-25',
+    course_end_date: null,
+    status: 'Completed',
+    flying_hours: null,
+    aircraft_type: null,
+    dgca_computer_no: null,
+    photo_url: null,
+    is_archived: false,
+    created_at: '2026-10-25T09:00:00.000Z',
+    updated_at: '2026-10-25T09:00:00.000Z'
+  },
+  {
+    id: 'vaa-std-4',
+    registration_number: 'VAA-2025-CPL-04',
+    application_number: 'VAA-APP-2025-04',
+    student_name: 'Rohit Joshi',
+    father_name: 'Sunil Joshi',
+    date_of_birth: '2002-04-18',
+    mobile_number: '9876543213',
+    email: 'rohit.joshi@example.com',
+    course_name: 'Commercial Pilot License (CPL)',
+    admission_date: '2025-04-01',
+    course_start_date: '2025-04-15',
+    course_end_date: '2026-10-30',
+    status: 'Active',
+    flying_hours: '85 Hours Completed',
+    aircraft_type: 'Cessna 172',
+    dgca_computer_no: 'C-4091823',
+    photo_url: null,
+    is_archived: false,
+    created_at: '2025-04-01T14:20:00.000Z',
+    updated_at: '2025-04-01T14:20:00.000Z'
   },
   {
     id: 'vaa-std-3',
@@ -72,28 +116,96 @@ const DEFAULT_STUDENTS: Student[] = [
     updated_at: '2025-03-01T09:30:00.000Z'
   },
   {
-    id: 'vaa-std-4',
-    registration_number: 'VAA-2025-CPL-04',
-    application_number: 'VAA-APP-2025-04',
-    student_name: 'Rohit Joshi',
-    father_name: 'Sunil Joshi',
-    date_of_birth: '2002-04-18',
-    mobile_number: '9876543213',
-    email: 'rohit.joshi@example.com',
-    course_name: 'Commercial Pilot License (CPL)',
-    admission_date: '2025-04-01',
-    course_start_date: '2025-04-15',
-    course_end_date: '2026-10-30',
-    status: 'Active',
-    flying_hours: '85 Hours Completed',
-    aircraft_type: 'Cessna 172',
-    dgca_computer_no: 'C-4091823',
+    id: 'vaa-std-2',
+    registration_number: 'VAA-2025-PPL-02',
+    application_number: 'VAA-APP-2025-02',
+    student_name: 'Priya Sharma',
+    father_name: 'Dinesh Sharma',
+    date_of_birth: '2002-11-20',
+    mobile_number: '9876543211',
+    email: 'priya.sharma@example.com',
+    course_name: 'Private Pilot License (PPL)',
+    admission_date: '2025-02-10',
+    course_start_date: '2025-03-01',
+    course_end_date: '2025-08-30',
+    status: 'Certified',
+    flying_hours: '50 Hours',
+    aircraft_type: 'Cessna 152',
+    dgca_computer_no: 'P-2039481',
     photo_url: null,
     is_archived: false,
-    created_at: '2025-04-01T14:20:00.000Z',
-    updated_at: '2025-04-01T14:20:00.000Z'
+    created_at: '2025-02-10T11:00:00.000Z',
+    updated_at: '2025-02-10T11:00:00.000Z'
+  },
+  {
+    id: 'vaa-std-1',
+    registration_number: 'VAA-2025-CPL-01',
+    application_number: 'VAA-APP-2025-01',
+    student_name: 'Rajesh Kumar Verma',
+    father_name: 'Surendra Kumar Verma',
+    date_of_birth: '2001-08-15',
+    mobile_number: '9876543210',
+    email: 'rajesh.verma@example.com',
+    course_name: 'Commercial Pilot License (CPL)',
+    admission_date: '2025-01-15',
+    course_start_date: '2025-02-01',
+    course_end_date: '2026-06-30',
+    status: 'Completed',
+    flying_hours: '200 Hours',
+    aircraft_type: 'Cessna 172 Skyhawk',
+    dgca_computer_no: 'C-1049283',
+    photo_url: null,
+    is_archived: false,
+    created_at: '2025-01-15T10:00:00.000Z',
+    updated_at: '2025-01-15T10:00:00.000Z'
   }
 ];
+
+/**
+ * Universal helper to sort students strictly latest-entry-first.
+ * 1. created_at (most recently added/created first)
+ * 2. admission_date / course_start_date (newest date first)
+ * 3. sequential number in registration number (higher/newer ID first)
+ */
+export function sortStudentsLatestFirst(list: Student[]): Student[] {
+  return [...list].sort((a, b) => {
+    // 1. Compare created_at timestamp
+    const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+    const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+    if (timeA && timeB && timeB !== timeA) {
+      return timeB - timeA;
+    }
+
+    // 2. Compare admission_date / course_start_date (latest date first)
+    const dateA = a.admission_date || a.course_start_date || '';
+    const dateB = b.admission_date || b.course_start_date || '';
+    if (dateA && dateB && dateA !== dateB) {
+      return dateB.localeCompare(dateA);
+    }
+
+    // 3. Compare sequential number in registration number (higher first)
+    const extractScore = (reg: string) => {
+      if (!reg) return 0;
+      const fullMatch = reg.match(/(\d{4})[^\d]+(\d+)/);
+      if (fullMatch) {
+        return parseInt(fullMatch[1], 10) * 100000 + parseInt(fullMatch[2], 10);
+      }
+      const matches = reg.match(/\d+/g);
+      if (matches && matches.length > 0) {
+        return matches.reduce((acc, curr) => acc * 1000 + parseInt(curr, 10), 0);
+      }
+      return 0;
+    };
+
+    const scoreA = extractScore(a.registration_number || a.application_number || '');
+    const scoreB = extractScore(b.registration_number || b.application_number || '');
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+
+    return (b.registration_number || '').localeCompare(a.registration_number || '');
+  });
+}
 
 function getLocalStudents(): Student[] {
   if (typeof window === 'undefined') return DEFAULT_STUDENTS;
@@ -132,10 +244,9 @@ export const studentService = {
         let query = supabase
           .from('students')
           .select('*')
-          .not('registration_number', 'ilike', 'IAA%')
-          .not('registration_number', 'ilike', 'IS0%')
-          .not('registration_number', 'ilike', 'IATA%')
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .order('admission_date', { ascending: false })
+          .order('registration_number', { ascending: false });
 
         if (!showArchived) {
           query = query.eq('is_archived', false);
@@ -143,7 +254,7 @@ export const studentService = {
 
         const { data, error } = await query;
         if (!error && data) {
-          let results = data as Student[];
+          let results = sortStudentsLatestFirst(data as Student[]);
           const trimmed = searchQuery.trim().toLowerCase();
           if (trimmed) {
             results = results.filter(
@@ -165,7 +276,7 @@ export const studentService = {
     }
 
     // Local Storage / Offline fallback
-    let list = getLocalStudents();
+    let list = sortStudentsLatestFirst(getLocalStudents());
     if (!showArchived) {
       list = list.filter((s) => !s.is_archived);
     }

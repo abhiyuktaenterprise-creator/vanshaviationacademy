@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '@/services/authService';
-import { studentService } from '@/services/studentService';
+import { studentService, sortStudentsLatestFirst } from '@/services/studentService';
 import { Student, NewStudentInput } from '@/types/student';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -162,14 +162,14 @@ export const AdminDashboard: React.FC = () => {
   const [formData, setFormData] = useState<NewStudentInput>(initialFormState);
   const [formSubmitting, setFormSubmitting] = useState(false);
 
-  // Load students
+  // Load students (strictly latest first)
   const loadStudents = async () => {
     setLoading(true);
     const res = await studentService.getStudents(searchQuery, showArchived);
     if (res.error) {
       toast.error('Error', { description: res.error });
     } else {
-      setStudents(res.data);
+      setStudents(sortStudentsLatestFirst(res.data));
     }
     setLoading(false);
   };
@@ -397,7 +397,7 @@ export const AdminDashboard: React.FC = () => {
     setLoading(true);
     const res = await studentService.getStudents('', showArchived);
     if (!res.error && res.data) {
-      setStudents(res.data);
+      setStudents(sortStudentsLatestFirst(res.data));
       toast.success('Live cloud registry synchronized successfully', {
         description: `${res.data.length} flight cadet records active in registry.`,
       });
@@ -612,7 +612,7 @@ export const AdminDashboard: React.FC = () => {
               No students found matching your criteria.
             </div>
           ) : (
-            students.map((student) => (
+            students.map((student, index) => (
               <Card key={student.id} className="border-slate-200 shadow-sm overflow-hidden">
                 <CardContent className="p-4 space-y-3">
                   <div className="flex items-start justify-between gap-3">
@@ -629,7 +629,14 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                       )}
                       <div>
-                        <h3 className="font-bold text-slate-900 text-sm">{student.student_name}</h3>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <h3 className="font-bold text-slate-900 text-sm">{student.student_name}</h3>
+                          {index === 0 && !searchQuery.trim() && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                              Latest Entry
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-slate-500">S/O: {student.father_name}</p>
                         <span className="font-mono text-xs text-sky-700 font-semibold block">
                           {student.registration_number}
@@ -724,7 +731,7 @@ export const AdminDashboard: React.FC = () => {
                     </td>
                   </tr>
                 ) : (
-                  students.map((student) => (
+                  students.map((student, index) => (
                     <tr key={student.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
@@ -740,7 +747,14 @@ export const AdminDashboard: React.FC = () => {
                             </div>
                           )}
                           <div>
-                            <div className="font-bold text-slate-900">{student.student_name}</div>
+                            <div className="flex items-center gap-2">
+                              <div className="font-bold text-slate-900">{student.student_name}</div>
+                              {index === 0 && !searchQuery.trim() && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  Latest Entry
+                                </span>
+                              )}
+                            </div>
                             <div className="text-xs text-slate-500">S/O: {student.father_name}</div>
                             {student.mobile_number && (
                               <div className="text-[11px] text-slate-400">📞 {student.mobile_number}</div>
